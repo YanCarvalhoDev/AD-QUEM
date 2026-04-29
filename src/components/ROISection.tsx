@@ -1,6 +1,7 @@
 // import React from "react";
 import { motion } from "motion/react";
 import { TrendingUp, Zap, BarChart3, ArrowUpRight } from "lucide-react";
+import { CONTACT_LINKS } from "../links";
 
 export default function ROISection() {
   const stats = [
@@ -125,12 +126,15 @@ export default function ROISection() {
               engenheiros.
             </p>
           </div>
-          <button
+          <a
+            href={CONTACT_LINKS.whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
             className="px-8 py-4 bg-gold-pale text-teal-deep font-bold rounded-full hover:bg-gold-pale/90 transition-all whitespace-nowrap flex items-center gap-2"
             aria-label="Solicitar diagnóstico de performance gratuito"
           >
             Solicitar Diagnóstico <Zap size={18} fill="currentColor" />
-          </button>
+          </a>
         </motion.div>
       </div>
     </section>
