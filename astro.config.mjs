@@ -4,6 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import cloudflare from "@astrojs/cloudflare";
 
 export default defineConfig({
+  site: 'https://www.adquem.com.br',
   output: "server",
   adapter: cloudflare(),
   integrations: [react()],
