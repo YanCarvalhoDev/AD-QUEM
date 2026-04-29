@@ -1,0 +1,132 @@
+---
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import WhatsAppButton from '../components/WhatsAppButton';
+import ProgressIndicator from '../components/ProgressIndicator';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  isDarkPage?: boolean;
+  className?: string;
+}
+
+const { 
+  title = "Arquiteto Digital Jurídico | Engenharia de Elite", 
+  isDarkPage = true, 
+  className = "bg-teal-deep" 
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <link 
+      rel="preload" 
+      href="/fonts/inter-v20-latin-regular.woff2" 
+      as="font" 
+      type="font/woff2" 
+      crossorigin 
+    />
+    <link 
+      rel="preload" 
+      href="/fonts/instrument-serif-v5-latin-regular.woff2" 
+      as="font" 
+      type="font/woff2" 
+      crossorigin 
+    />
+    
+    <title>{title}</title>
+    <meta name="description" content="Engenharia de software de elite para bancas jurídicas boutique e o 1% do mercado brasileiro. Soluções digitais customizadas para alta performance." />
+    <meta name="keywords" content="engenharia de software jurídico, arquiteto digital, tecnologia para advogados, automação jurídica, software sob medida, bancas boutique" />
+    <link rel="canonical" href={Astro.url.href} />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content="Engenharia de software de elite para bancas jurídicas boutique e o 1% do mercado brasileiro." />
+    <meta property="og:image" content="/og-image.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url.href} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content="Engenharia de software de elite para bancas jurídicas boutique e o 1% do mercado brasileiro." />
+    <meta property="twitter:image" content="/og-image.jpg" />
+
+    <!-- Schema.org for Google -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": "Arquiteto Digital Jurídico",
+        "description": "Engenharia de software de elite para bancas jurídicas boutique e o 1% do mercado brasileiro.",
+        "image": "/og-image.jpg",
+        "url": "https://arquitetodigital.com.br",
+        "priceRange": "R$ 2.000,00+",
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": "-23.5505",
+          "longitude": "-46.6333"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "São Paulo",
+          "addressRegion": "SP",
+          "addressCountry": "BR"
+        },
+        "openingHoursSpecification": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday"
+          ],
+          "opens": "09:00",
+          "closes": "18:00"
+        },
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Engenharia de Elite",
+          "itemListElement": [
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Desenvolvimento de Software Customizado",
+                "description": "Soluções de engenharia para gestão e automação jurídica de alta complexidade."
+              },
+              "price": "2000.00",
+              "priceCurrency": "BRL"
+            }
+          ]
+        }
+      }
+    </script>
+  </head>
+  <body class={`min-h-screen selection:bg-gold-pale selection:text-teal-deep ${className}`}>
+    <ProgressIndicator client:idle />
+    
+    <Header isDarkPage={isDarkPage} client:idle />
+    
+    <main>
+      <slot />
+    </main>
+
+    <Footer client:visible />
+    <!-- <WhatsAppButton client:visible /> -->
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --accent: #C0B283;
+  }
+</style>

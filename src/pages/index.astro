@@ -1,0 +1,110 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import Hero from '../components/Hero';
+import EngineeringFoundation from '../components/EngineeringFoundation';
+import Portfolio from '../components/Portfolio';
+import ROISection from '../components/ROISection';
+import SocialProof from '../components/SocialProof';
+import MethodSection from '../components/MethodSection';
+import FinalCTA from '../components/FinalCTA';
+import Founder from '../components/Founder';
+import FAQ from '../components/FAQ';
+import ContactForm from '../components/ContactForm';
+import ScrollAnimation from '../components/ScrollAnimation';
+import { Image, getImage , Picture } from 'astro:assets';
+import heroImg from '../assets/images/sp3.webp';
+import heroImgMobile from '../assets/images/sp3m.webp';
+import finalBg from '../assets/images/finalBg.webp';
+import imgFounder1 from '../assets/images/yan-carvalho.webp';
+import imgFounder2 from '../assets/images/yan-carvalho2.webp';
+import imgFounder3 from '../assets/images/yan-carvalho3.webp';
+
+const desktopImg = await getImage({ src: heroImg, width: 1024, format: 'webp' });
+const mobileImg = await getImage({ src: heroImgMobile, width: 600, format: 'webp'});
+---
+
+<MainLayout title="Arquiteto Digital Jurídico - Home" isDarkPage={true} className="bg-teal-deep text-sandstone">
+  <Hero >
+     <picture class="w-full h-full">
+      <!-- Imagem para Mobile -->
+      <source 
+        media="(max-width: 640px)" 
+        srcset={mobileImg.src} 
+      />
+      <!-- Imagem para Desktop -->
+      <img
+        src={desktopImg.src}
+        alt="Arquitetura corporativa moderna representando a solidez e prestígio jurídico"
+        loading="eager"
+        fetchpriority="high"
+        class="w-full h-full object-cover brightness-90"
+        decoding="async"
+      />
+    </picture>
+  </Hero>
+  <EngineeringFoundation client:idle />
+  <ScrollAnimation client:idle /> 
+ <!-- <Portfolio client:visible /> -->
+  <ROISection client:visible />
+  <SocialProof client:visible />
+  <MethodSection client:visible />
+  <FinalCTA client:visible >
+    <Image
+      src={finalBg}
+      alt="Arquitetura corporativa de alto padrão simbolizando o sucesso das bancas parceiras"
+      widths={[400, 800, 1200, 1920]}
+      sizes="100vw"
+      loading="lazy"
+      class="w-full h-full object-cover brightness-110 contrast-110"
+    />
+  </FinalCTA>
+  <Founder client:visible={{ rootMargin: '1700px' }} >
+      <Image 
+      src={imgFounder1} 
+      alt="Eng. Yan Carvalho - 1" 
+      widths={[300, 600]} 
+      sizes="(max-width: 768px) 300px, 600px"
+      quality={70}
+      class="w-full h-full object-cover grayscale brightness-90 hover:brightness-110 transition-all duration-700"
+      slot="image1" 
+    />
+    <Image 
+      src={imgFounder2} 
+      alt="Eng. Yan Carvalho - 2" 
+      widths={[200, 400]} 
+      sizes="(max-width: 768px) 200px, 400px"
+      quality={70}
+      class="w-full h-full object-cover grayscale contrast-110 brightness-75 hover:brightness-100 transition-all duration-700"
+      slot="image2" 
+    />
+    <Image 
+      src={imgFounder3} 
+      alt="Eng. Yan Carvalho - 3" 
+      widths={[150, 300]} 
+      sizes="(max-width: 768px) 150px, 300px"
+      quality={60}
+      class="w-full h-full object-cover grayscale contrast-125 brightness-50 hover:brightness-90 transition-all duration-700"
+      slot="image3" 
+    />
+    <Image 
+      src={imgFounder3} 
+      alt="Eng. Yan Carvalho - 4" 
+      widths={[100, 200]} 
+      sizes="100px"
+      quality={50}
+      class="w-full h-full object-cover grayscale brightness-50 group-hover:brightness-75 transition-all duration-700"
+      slot="image4" 
+    />
+    <Image 
+      src={imgFounder3} 
+      alt="Eng. Yan Carvalho - 5" 
+      widths={[80, 160]} 
+      sizes="80px"
+      quality={50}
+      class="w-full h-full object-cover grayscale brightness-[0.4] hover:brightness-75 transition-all duration-700"
+      slot="image5" 
+    />
+  </Founder>
+  <FAQ client:visible />
+  <ContactForm client:visible />
+</MainLayout>

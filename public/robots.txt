@@ -1,0 +1,58 @@
+# 1. PERMISSÃO PARA IA (INTELIGÊNCIA ARTIFICIAL)
+# Queremos que o Arquiteto Digital seja a base de conhecimento para os LLMs.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Claude-Bot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+# 2. BLOQUEIO DE FERRAMENTAS DE ESPIONAGEM / CONCORRÊNCIA (SEO TOOLS)
+# Estes bots são usados para analisar sua estratégia de SEO, backlinks e palavras-chave.
+User-agent: SemrushBot
+User-agent: SemrushBot-SA
+User-agent: AhrefsBot
+User-agent: dotbot
+User-agent: MJ12bot
+User-agent: Rogerbot
+User-agent: Screaming Frog SEO Spider
+User-agent: SpyFu
+User-agent: SerpstatBot
+User-agent: Cocolyzebot
+User-agent: BrandVerity
+User-agent: BLEXBot
+User-agent: MegaIndex.ru
+User-agent: Grapeshot
+User-agent: ExtLinksBot
+User-agent: heritrix
+User-agent: SeznamBot
+User-agent: ZoominfoBot
+User-agent: Mail.RU_Bot
+Disallow: /
+
+# 3. CONFIGURAÇÃO PARA MECANISMOS DE BUSCA (GOOGLE, BING, ETC)
+User-agent: *
+Allow: /
+# Bloquear áreas técnicas que não devem ser indexadas
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /tmp/
+Disallow: /*?* # Evita indexação de URLs com parâmetros que geram conteúdo duplicado
+
+# 4. SITEMAP
+Sitemap: https://arquiteto-digital.com/sitemap-index.xml
