@@ -6,7 +6,9 @@ import cloudflare from "@astrojs/cloudflare";
 export default defineConfig({
   site: 'https://www.adquem.com.br',
   output: "static",
-  adapter: cloudflare(),
+  adapter: cloudflare({
+    imageService: 'compile'
+  }),
   integrations: [react()],
   vite: {
     plugins: [tailwindcss()],
