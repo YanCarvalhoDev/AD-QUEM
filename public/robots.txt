@@ -47,5 +47,3 @@ Disallow: /admin/
 Disallow: /private/
 Disallow: /tmp/
 Disallow: /*?* 
-
-Sitemap: https://adquem.com.br
