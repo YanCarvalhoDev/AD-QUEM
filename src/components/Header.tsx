@@ -1067,7 +1067,9 @@ export default function Header({ isDarkPage = false }: HeaderProps) {
 
                   <div className="pt-6">
                     <a
-                      href={`/${INTERNAL_LINKS.aplicacao}`}
+                      href={CONTACT_LINKS.whatsapp}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       onClick={() => setIsOpen(false)}
                       className="w-full py-4 bg-[#005F6B] text-white text-center font-bold rounded-xl block text-lg shadow-xl shadow-[#005F6B]/20"
                     >
