@@ -1,7 +1,6 @@
 import React from "react";
 import { motion } from "motion/react";
-// import { ArrowRight } from "lucide-react";
-import { INTERNAL_LINKS } from "../links";
+import { INTERNAL_LINKS, CONTACT_LINKS } from "../links";
 
 interface HeroProps {
   children?: React.ReactNode;
@@ -97,9 +96,6 @@ export default function Hero({ children }: HeroProps) {
             padrão.
           </h1>
           <p className="text-[16px] md:text-[18px] text-white/90 mb-8 lg:mb-10 font-medium leading-relaxed max-w-2xl">
-            {/* Precisão algorítmica aplicada ao prestígio jurídico. Projetamos
-            ativos de poder para o 1% do mercado brasileiro, unindo engenharia
-            de ponta à sofisticação editorial. */}
             Projetamos e desenvolvemos sites de alto padrão para bancas
             jurídicas que desejam atrair clientes qualificados, fortalecer sua
             reputação e operar com máxima eficiência digital.
@@ -107,7 +103,7 @@ export default function Hero({ children }: HeroProps) {
 
           <div className="flex flex-wrap gap-5">
             <motion.a
-              href={INTERNAL_LINKS.aplicacao}
+              href={CONTACT_LINKS.whatsapp}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="px-10 py-4 bg-gold-pale text-teal-deep font-bold rounded-full text-[15px] transition-all"
@@ -115,15 +111,6 @@ export default function Hero({ children }: HeroProps) {
             >
               Entrar em contato
             </motion.a>
-            {/* <motion.a
-              href={INTERNAL_LINKS.metodo}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="px-10 py-4 border border-white text-white font-bold rounded-full text-[15px] flex items-center gap-2 hover:bg-white/10 transition-all"
-              aria-label="Ver nossos serviços e metodologia"
-            >
-              Conhecer o método <ArrowRight size={18} />
-            </motion.a> */}
             <motion.a
               href={INTERNAL_LINKS.metodo}
               whileHover={{ scale: 1.02 }}
