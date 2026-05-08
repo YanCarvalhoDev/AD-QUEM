@@ -69,9 +69,20 @@ export default function Footer() {
       <div className="container mx-auto px-6">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20 text-center md:text-left">
           <div className="space-y-8 flex flex-col items-center md:items-start text-center md:text-left">
-            <div className="text-3xl font-serif tracking-tight">
-              <span className="text-gold-pale">A</span>D
-              <span className="text-gold-pale">J</span>
+            <div className="text-3xl font-serif tracking-tight flex items-end gap-4">
+              <img
+                src="/AQ_Ad_Quem_logo.png"
+                alt="Logo AQ"
+                className="h-16 w-auto filter-gold-matte"
+              />
+              <div className="flex flex-col leading-none">
+                <span className="text-sm font-bold uppercase tracking-[0.2em] ">
+                  Ad
+                </span>
+                <span className="text-sm font-bold uppercase tracking-[0.2em] ">
+                  Quem
+                </span>
+              </div>
             </div>
             <p className="text-sandstone/80 text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
               Construímos a presença digital de bancas que se recusam a parecer
