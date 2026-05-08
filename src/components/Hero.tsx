@@ -104,10 +104,12 @@ export default function Hero({ children }: HeroProps) {
           <div className="flex flex-wrap gap-5">
             <motion.a
               href={CONTACT_LINKS.whatsapp}
+              target="_blank"             
+              rel="noopener noreferrer" 
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="px-10 py-4 bg-gold-pale text-teal-deep font-bold rounded-full text-[15px] transition-all"
-              aria-label="Iniciar aplicação para entrar em contato"
+              aria-label="Iniciar contato via Whatsapp"
             >
               Entrar em contato
             </motion.a>
