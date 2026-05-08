@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://sitemaps.org">
+  <!-- Home -->
+  <url>
+    <loc>https://www.adquem.com.br/</loc>
+    <lastmod>2024-05-22</lastmod>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Performance -->
+  <url>
+    <loc>https://www.adquem.com.br/performance/</loc>
+    <lastmod>2024-05-22</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Privacidade -->
+  <url>
+    <loc>https://www.adquem.com.br/privacidade/</loc>
+    <lastmod>2024-05-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Termos -->
+  <url>
+    <loc>https://www.adquem.com.br/termos/</loc>
+    <lastmod>2024-05-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+</urlset>
