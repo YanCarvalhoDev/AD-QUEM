@@ -12,7 +12,7 @@ interface Props {
 }
 
 const { 
-  title = "Arquiteto Digital Jurídico | Engenharia de Elite", 
+  title = "Sites para Advogados de Alto Padrão | Engenharia Digital AD QUEM", 
   isDarkPage = true, 
   className = "bg-teal-deep" 
 } = Astro.props;
@@ -49,15 +49,15 @@ const {
     <meta property="og:type" content="website" />
     <meta property="og:url" content={Astro.url.href} />
     <meta property="og:title" content={title} />
-    <meta property="og:description" content="Engenharia de software de elite para bancas jurídicas boutique e o 1% do mercado brasileiro." />
-    <meta property="og:image" content="/og-image.jpg" />
+    <meta property="og:description" content="Projetamos sites de alto padrão para advogados que buscam autoridade inquestionável, performance de elite e conformidade total com a OAB." />
+    <meta property="og:image" content="/AQ_logo_g.png" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={Astro.url.href} />
     <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content="Engenharia de software de elite para bancas jurídicas boutique e o 1% do mercado brasileiro." />
-    <meta property="twitter:image" content="/og-image.jpg" />
+    <meta property="twitter:description" content="Projetamos sites de alto padrão para advogados que buscam autoridade inquestionável, performance de elite e conformidade total com a OAB." />
+    <meta property="twitter:image" content="/AQ_logo_g.png" />
 
     <!-- Schema.org for Google -->
     <script type="application/ld+json">
@@ -65,9 +65,9 @@ const {
         "@context": "https://schema.org",
         "@type": "ProfessionalService",
         "name": "Arquiteto Digital Jurídico",
-        "description": "Engenharia de software de elite para bancas jurídicas boutique e o 1% do mercado brasileiro.",
-        "image": "/og-image.jpg",
-        "url": "https://arquitetodigital.com.br",
+        "description": "Projetamos sites de alto padrão para advogados que buscam autoridade inquestionável, performance de elite e conformidade total com a OAB.",
+        "image": "/AQ_logo_g.png",
+        "url": "https://www.adquem.com.br",
         "priceRange": "R$ 2.000,00+",
         "geo": {
           "@type": "GeoCoordinates",
@@ -80,6 +80,17 @@ const {
           "addressRegion": "SP",
           "addressCountry": "BR"
         },
+        "areaServed": [
+          {
+            "@type": "Country",
+            "name": "Brasil"
+          },
+          {
+            "@type": "City",
+            "name": "São Paulo",
+            "description": "Centro estratégico de atendimento para bancas de alto padrão."
+          }
+        ],
         "openingHoursSpecification": {
           "@type": "OpeningHoursSpecification",
           "dayOfWeek": [
@@ -87,24 +98,48 @@ const {
             "Tuesday",
             "Wednesday",
             "Thursday",
-            "Friday"
+            "Friday",
+            "Saturday",
+            "Sunday"
           ],
-          "opens": "09:00",
-          "closes": "18:00"
+          "opens": "08:00",
+          "closes": "20:00"
         },
         "hasOfferCatalog": {
           "@type": "OfferCatalog",
-          "name": "Engenharia de Elite",
+          "name": "Engenharia de Ativos Jurídicos",
           "itemListElement": [
             {
               "@type": "Offer",
               "itemOffered": {
                 "@type": "Service",
-                "name": "Desenvolvimento de Software Customizado",
-                "description": "Soluções de engenharia para gestão e automação jurídica de alta complexidade."
-              },
-              "price": "2000.00",
-              "priceCurrency": "BRL"
+                "name": "Arquitetura de Prestígio e Blindagem Digital",
+                "description": "Desenvolvimento nativo com conformidade rigorosa ao Provimento 205/2021 da OAB e LGPD."
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Performance de Alta Disponibilidade",
+                "description": "Infraestrutura de elite com carregamento instantâneo para garantir a retenção de clientes de alto ticket."
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Inteligência de Posicionamento e SEO",
+                "description": "Dominância em buscas orgânicas para termos jurídicos de alta conversão e relevância estratégica."
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Design Institucional de Autoridade",
+                "description": "Interfaces projetadas para transmitir solidez, tradição e o rigor técnico das bancas líderes de mercado."
+              }
             }
           ]
         }
