@@ -7,43 +7,34 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-User-agent: Claude-Bot
+User-agent: ClaudeBot
 Allow: /
 
 User-agent: anthropic-ai
-Allow: /
-
-User-agent: CCBot
 Allow: /
 
 User-agent: OAI-SearchBot
 Allow: /
 
 User-agent: SemrushBot
-User-agent: SemrushBot-SA
-User-agent: AhrefsBot
-User-agent: dotbot
-User-agent: MJ12bot
-User-agent: Rogerbot
-User-agent: Screaming Frog SEO Spider
-User-agent: SpyFu
-User-agent: SerpstatBot
-User-agent: Cocolyzebot
-User-agent: BrandVerity
-User-agent: BLEXBot
-User-agent: MegaIndex.ru
-User-agent: Grapeshot
-User-agent: ExtLinksBot
-User-agent: heritrix
-User-agent: SeznamBot
-User-agent: ZoominfoBot
-User-agent: Mail.RU_Bot
 Disallow: /
 
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+# Regras gerais
 User-agent: *
 Allow: /
+
 Disallow: /api/
 Disallow: /admin/
 Disallow: /private/
 Disallow: /tmp/
-Disallow: /*?* 
+
+Sitemap: https://www.adquem.com.br/sitemap.xml
