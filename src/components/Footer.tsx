@@ -203,7 +203,7 @@ export default function Footer() {
             </ul>
           </nav>
 
-          {/* <nav aria-label="Links Legais">
+          <nav aria-label="Links Legais">
             <h3 className="text-gold-pale uppercase tracking-widest text-xs font-bold mb-8">
               Legal
             </h3>
@@ -218,14 +218,14 @@ export default function Footer() {
                   Termos de Uso
                 </a>
               </li>
-               <li>
+               {/* <li>
                 <span className="opacity-80">Compliance OAB</span>
               </li>
               <li>
                 <span className="opacity-80">Segurança</span>
-              </li> 
+              </li>  */}
             </ul>
-          </nav> */}
+          </nav>
         </div>
 
         <div className="pt-8 border-t border-gold-pale/5 flex flex-col md:flex-row justify-between items-center gap-4">
