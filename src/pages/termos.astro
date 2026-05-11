@@ -2,34 +2,104 @@
 import MainLayout from '../layouts/MainLayout.astro';
 ---
 
-<MainLayout title="Termos de Uso - Arquiteto Digital Jurídico" isDarkPage={true} className="bg-white">
+<MainLayout title="Termos de Uso - Ad Quem" isDarkPage={true} className="bg-white">
   <main>
-    <section className="bg-teal-deep pt-40 pb-24 px-6 lg:px-20 lg:rounded-br-[80px]">
-      <div className="container mx-auto max-w-4xl">
-        <span className="text-gold-pale font-mono text-xs tracking-[0.3em] uppercase mb-6 block font-bold">
+  <section class="bg-teal-deep pt-40 pb-24 px-6 lg:px-20 lg:rounded-br-[80px]">
+    <div class="container mx-auto max-w-4xl">
+      <div class="animate-fade-up">
+        <span class="text-gold-pale font-mono text-xs tracking-[0.3em] uppercase mb-6 block font-bold">
           Legal & Compliance
         </span>
-        <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif leading-tight mb-8 text-white">
+        <h1 class="text-4xl sm:text-5xl md:text-7xl font-serif leading-tight mb-8 text-white">
           Termos de <br />
-          <span className="text-gold-pale italic">Uso</span>
+          <span class="text-gold-pale italic">Uso</span>
         </h1>
-        <p className="text-xl text-sandstone/60 leading-relaxed max-w-2xl">
+        <p class="text-xl text-sandstone/60 leading-relaxed max-w-2xl">
           As diretrizes que regem nossa parceria de alta performance. Transparência, rigor técnico e proteção jurídica integral para ambas as partes.
         </p>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <div className="py-20 px-6 lg:px-20">
-      <div className="container mx-auto max-w-4xl">
-        <div className="space-y-12 text-[#002B36]/90 leading-relaxed">
-          <section>
-            <h2 className="text-2xl font-serif text-[#005F6B] mb-4 font-bold">1. Aceitação e Escopo de Atuação</h2>
-            <p>
-              Ao acessar a plataforma da Arquiteto Digital Jurídico ou contratar nossos serviços, você declara ciência e aceitação irrevogável destes termos. Nossos serviços são exclusivos para bancas de advocacia e profissionais do direito. 
-            </p>
-          </section>
+  <div class="bg-white py-20 px-6 lg:px-20">
+    <div class="container mx-auto max-w-4xl">
+      <div class="space-y-12 text-[#002B36]/90 leading-relaxed text-justify">
+        
+        <section>
+          <h2 class="text-2xl font-serif text-[#005F6B] mb-4 font-bold">1. Natureza Jurídica e Adesão</h2>
+          <p>
+            Os presentes Termos constituem um contrato de adesão celebrado entre a <strong>Ad Quem</strong> e a Contratante. Ao formalizar o <em>onboarding</em> ou acessar nossos sistemas, a banca declara ciência inequívoca de que nossos serviços caracterizam-se como <strong>obrigações de meio</strong>, focadas no suporte estratégico e na engenharia de performance para o ecossistema jurídico. Reservamo-nos o direito de rescindir parcerias que violem preceitos éticos ou técnicos aqui estabelecidos.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-serif text-[#005F6B] mb-4 font-bold">2. Ativos Digitais e Propriedade Intelectual</h2>
+          <p>
+            Todo o ecossistema lógico, incluindo algoritmos de compressão, arquitetura de dados, metodologias proprietárias e códigos-fonte, permanece sob titularidade exclusiva da <strong>Ad Quem</strong>, protegidos pelas Leis nº 9.609/98 e nº 9.610/98. É concedida à banca uma licença de uso perpétua e não exclusiva sobre o produto final entregue. É terminantemente proibida qualquer tentativa de engenharia reversa, sublicenciamento ou reprodução de nossa infraestrutura lógica para fins de terceiros.
+          </p>
+        </section>
+
+        <section class="bg-slate-50 p-8 rounded-lg border-l-4 border-gold-pale">
+          <h2 class="text-2xl font-serif text-[#005F6B] mb-4 font-bold">3. Proteção de Dados e Compliance (LGPD)</h2>
+          <p class="mb-4">
+            Em conformidade com a Lei nº 13.709/2018, a <strong>Ad Quem</strong> atua na condição de <strong>Operadora de Dados</strong>, processando informações sob estrita diretriz do Controlador (a banca contratante).
+          </p>
+          <ul class="list-disc pl-6 space-y-3 text-sm italic">
+            <li><strong>Finalidade Estrita:</strong> O tratamento de dados ocorre exclusivamente para a viabilização técnica dos serviços e otimização da performance digital.</li>
+            <li><strong>Segurança da Informação:</strong> Empregamos protocolos de criptografia e isolamento de dados conforme os padrões ISO/IEC 27001.</li>
+            <li><strong>Responsabilidade do Controlador:</strong> A banca garante possuir base legal válida para todos os dados compartilhados com a <strong>Ad Quem</strong>, isentando esta de responsabilidade por coletas indevidas de terceiros.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-serif text-[#005F6B] mb-4 font-bold">4. Limitação de Responsabilidade e Riscos de Mercado</h2>
+          <p>
+            A <strong>Ad Quem</strong> não garante resultados financeiros, captação de clientes ou êxito em teses jurídicas, uma vez que o sucesso comercial depende de variáveis mercadológicas e da atuação técnico-jurídica da banca. 
+          </p>
+          <ul class="list-disc pl-6 mt-4 space-y-2">
+            <li><strong>Conformidade Ética:</strong> A responsabilidade pelo conteúdo publicado e sua adequação ao Código de Ética e Disciplina da OAB (Provimento 205/2021) é exclusiva do advogado.</li>
+            <li><strong>Infraestrutura de Terceiros:</strong> Não nos responsabilizamos por instabilidades em serviços de cloud (Cloudflare, AWS, Vercel, Google) ou ataques cibernéticos de força maior.</li>
+            <li><strong>Teto Indenizatório:</strong> Em qualquer hipótese, a responsabilidade civil da <strong>Ad Quem</strong> limita-se ao valor total efetivamente pago pela contratante nos últimos 3 meses, com renúncia expressa a pleitos de danos morais ou lucros cessantes.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-serif text-[#005F6B] mb-4 font-bold">5. Confidencialidade e Sigilo Profissional</h2>
+          <p>
+            Dada a natureza sensível da atividade jurídica, as partes obrigam-se a manter sob sigilo absoluto toda e qualquer informação estratégica ou segredo de negócio. Este dever de confidencialidade perdurará por 5 (cinco) anos após o encerramento da relação contratual, sob as penas da lei civil.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-serif text-[#005F6B] mb-4 font-bold">6. Eleição de Foro e Lei Aplicável</h2>
+          <p>
+            Este instrumento é regido pela legislação brasileira. Para dirimir quaisquer controvérsias, as partes elegem o Foro da Comarca da sede da <strong>Ad Quem</strong>, com renúncia expressa a qualquer outro, por mais privilegiado que seja.
+          </p>
+        </section>
+
+        <div class="pt-12 border-t border-gray-200 text-sm text-[#002B36]/40 flex justify-between items-center">
+          <span>Versão 2.1 - Protocolo Ad Quem</span>
+          <span>Última atualização: 11 de Maio de 2026.</span>
         </div>
       </div>
     </div>
-  </main>
+  </div>
+</main>
+
+<style>
+  .animate-fade-up {
+    animation: fadeUp 0.8s ease-out forwards;
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
 </MainLayout>
