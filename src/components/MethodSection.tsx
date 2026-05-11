@@ -54,7 +54,9 @@ export default function MethodSection() {
       ref={containerRef}
       className="pt-20 pb-60 bg-[#f4f1ea] relative overflow-hidden"
     >
-      {/* Background patterns could be added here as CSS classes if they exist in global.css */}
+      <div className="papel-organico" aria-hidden="true" />
+      <div className="papel-vincado" aria-hidden="true" />
+      
       <div className="container mx-auto px-6 lg:px-24 relative z-10">
         {/* Header Section */}
         <div className="max-w-4xl mx-auto mb-24 text-center">
