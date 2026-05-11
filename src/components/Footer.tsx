@@ -196,7 +196,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="gold-hover"
                 >
-                  WhatsApp
+                  (74) 98824-8384
                 </a>
               </li>
               <li>Brasil</li>
