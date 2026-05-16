@@ -1,40 +1,4 @@
-User-agent: GPTBot
-Allow: /
-
-User-agent: ChatGPT-User
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
-User-agent: ClaudeBot
-Allow: /
-
-User-agent: anthropic-ai
-Allow: /
-
-User-agent: OAI-SearchBot
-Allow: /
-
-User-agent: SemrushBot
-Disallow: /
-
-User-agent: AhrefsBot
-Disallow: /
-
-User-agent: MJ12bot
-Disallow: /
-
-User-agent: DotBot
-Disallow: /
-
-# Regras gerais
 User-agent: *
-Allow: /
-
 Disallow: /api/
-Disallow: /admin/
-Disallow: /private/
-Disallow: /tmp/
 
 Sitemap: https://www.adquem.com.br/sitemap.xml
