@@ -1,4 +1,33 @@
+User-agent: SemrushBot
+User-agent: SemrushBot-SA
+User-agent: AhrefsBot
+User-agent: dotbot
+User-agent: MJ12bot
+User-agent: Rogerbot
+User-agent: Screaming Frog SEO Spider
+User-agent: SpyFu
+User-agent: SerpstatBot
+User-agent: Cocolyzebot
+User-agent: BrandVerity
+User-agent: BLEXBot
+User-agent: MegaIndex.ru
+User-agent: Grapeshot
+User-agent: ExtLinksBot
+User-agent: heritrix
+User-agent: SeznamBot
+User-agent: ZoominfoBot
+User-agent: Mail.RU_Bot
+Disallow: /
+
 User-agent: *
+Allow: /
+
 Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /tmp/
+
+Disallow: /*?*
+
 
 Sitemap: https://www.adquem.com.br/sitemap.xml
