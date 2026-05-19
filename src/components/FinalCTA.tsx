@@ -46,15 +46,14 @@ export default function FinalCTA({ children }: FinalCTAProps) {
             </div>
 
             <h2 className="relative z-10 text-2xl md:text-4xl font-serif text-teal-deep leading-tighter mb-8 font-black">
-              Este não é um serviço para todos. <br />
-              <span className="text-teal-deep/90 italic block mt-2">
+              Os escritórios que crescem mais rápido não deixam o posicionamento ao acaso. <br />
+              {/* <span className="text-teal-deep/90 italic block mt-2">
                 Trabalhamos com um número limitado de bancas por semestre.
-              </span>
+              </span> */}
             </h2>
 
             <p className="relative z-10 text-teal-deep text-base mb-8 max-w-lg mx-auto font-bold leading-relaxed">
-              Selecionamos parceiros que buscam uma vantagem competitiva
-              inquestionável no mercado jurídico de alto padrão.
+              Selecionamos poucos parceiros por semestre para implementar estratégias de posicionamento e aquisição no jurídico de alto padrão.
             </p>
 
             <a
@@ -64,7 +63,7 @@ export default function FinalCTA({ children }: FinalCTAProps) {
               className="relative z-10 inline-flex items-center gap-3 px-10 py-5 bg-gold-pale text-teal-deep rounded-full font-black text-base transition-all hover:scale-[1.02] active:scale-[0.98] hover:shadow-xl hover:shadow-gold-pale/30"
               aria-label="Agendar uma reunião estratégica exclusiva"
             >
-              <span>Agendar Reunião Estratégica</span>
+              <span>Agendar Reunião</span>
               <svg
                 width="20"
                 height="20"
