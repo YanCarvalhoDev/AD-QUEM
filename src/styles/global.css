@@ -228,7 +228,7 @@
   }
 
   /* BLUEPRINT 3D HERO */
-  /* .blueprint-3d {
+  .blueprint-3d {
     @apply absolute pointer-events-none transition-all duration-700;
     width: 600px;
     height: 600px;
@@ -278,102 +278,6 @@
     }
   }
 
-  .c1 {
-    animation-duration: 25s;
-    opacity: 0.1;
-  }
-  .c2 {
-    animation-duration: 35s;
-    opacity: 0.15;
-    animation-direction: reverse;
-  }
-  .c3 {
-    animation-duration: 20s;
-    opacity: 0.2;
-  }
-  .c4 {
-    animation-duration: 45s;
-    opacity: 0.25;
-    animation-direction: reverse;
-  }
-  .c5 {
-    animation-duration: 30s;
-    opacity: 0.3;
-  }
-  .c6 {
-    animation-duration: 50s;
-    opacity: 0.35;
-    animation-direction: reverse;
-  }
-  .c7 {
-    animation-duration: 40s;
-    opacity: 0.4;
-  }
-} */
-.blueprint-3d {
-    /* CORREÇÃO: Mudado de transition-all para transition apenas de transform e opacity */
-    @apply absolute pointer-events-none;
-    transition:
-      transform 700ms ease,
-      opacity 700ms ease;
-
-    width: 600px;
-    height: 600px;
-    transform: perspective(1000px) rotateX(60deg) rotateY(-10deg) rotateZ(0deg);
-    right: -100px;
-    top: 50%;
-    margin-top: -300px;
-    z-index: 0;
-  }
-
-  @media (min-width: 1024px) {
-    .blueprint-3d {
-      width: 850px;
-      height: 850px;
-      margin-top: -425px;
-      right: 0px;
-      transform: perspective(1000px) rotateX(60deg) rotateY(-20deg)
-        rotateZ(10deg);
-    }
-  }
-
-  .circulo-3d {
-    fill: none;
-    stroke-width: 3.5;
-    stroke-linecap: round;
-    stroke-dasharray: 1, 15;
-    transform-origin: center;
-
-    /* CORREÇÃO 1: Avisa a GPU sobre a animação contínua */
-    will-change: transform;
-    /* CORREÇÃO 2: Força uma camada de renderização própria (composite layer) */
-    transform: translateZ(0);
-
-    animation: orbitar 20s linear infinite;
-  }
-
-  /* Gradiente para simular Profundidade */
-  .gradiente-3d {
-    stroke: #c0b283;
-    opacity: 0.3;
-    /* CORREÇÃO: Focado apenas em opacity em vez de monitorar tudo */
-    transition: opacity 0.5s ease;
-  }
-
-  .blueprint-3d:hover .gradiente-3d {
-    opacity: 0.8;
-  }
-
-  @keyframes orbitar {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  /* Delays e velocidades diferentes para cada órbita */
   .c1 {
     animation-duration: 25s;
     opacity: 0.1;
