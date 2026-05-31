@@ -10,43 +10,43 @@ export default function MethodSection() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const steps = [
-    {
-      id: "01",
-      title: "Resiliência Digital: Conformidade do Provimento 205/2021",
-      content:
-        "Seu site é construído sobre infraestrutura própria, sem dependência de plataformas de terceiros. Isso significa conformidade total com a OAB, dados sob sua custódia e performance que não cai quando o servidor de outro alguém falha.",
-      value:
-        "Privacidade, segurança e um site que responde com consistência em qualquer cenário.",
-      image: method1,
-    },
-    {
-      id: "02",
-      title: "Curadoria Estética: O Luxo como Ativo",
-      content:
-        "A interface é projetada como um ativo de prestígio. Nossa curadoria une precisão algorítmica a uma estética minimalista e austera, comunicando solidez de forma perentória para bancas que prezam pela discrição e autoridade.",
-      value:
-        "Uma identidade própria que eleva a percepção de valor e atrai clientes mais alinhados ao perfil da banca.",
-      image: method2,
-    },
-    {
-      id: "03",
-      title: "Execução Técnica e Entrega Estruturada",
-      content:
-        "Transformamos a complexidade técnica em um processo claro e previsível. O projeto é desenvolvido com controle rigoroso de qualidade e entregue em até 20 dias, já pronto para operar com estabilidade e desempenho consistente.",
-      value:
-        "Previsibilidade total para o plano estratégico da sua banca. Transformamos o intangível em patrimônio digital líquido.",
-      image: method3,
-    },
-    {
-      id: "04",
-      title: "Governança Técnica e Independência de Plataforma",
-      content:
-        "A estrutura do seu site é construída sem dependência de plataformas limitadas ou soluções engessadas. Isso garante estabilidade, segurança e liberdade para evoluções futuras, sem os riscos comuns de sistemas genéricos.",
-      value:
-        "Controle prático sobre sua presença digital, com uma base sólida que permite crescimento contínuo e previsível.",
-      image: method4,
-    },
-  ];
+  {
+    id: "01",
+    title: "Diagnóstico Estratégico e Arquitetura Digital",
+    content:
+      "Antes do desenvolvimento, estruturamos a arquitetura da sua presença digital. Mapeamos posicionamento, serviços e objetivos para construir uma base estratégica alinhada à autoridade e às necessidades da banca.",
+    value:
+      "Uma direção clara que transforma presença digital em posicionamento institucional.",
+    image: method1,
+  },
+  {
+    id: "02",
+    title: "Curadoria Estética e Construção da Identidade",
+    content:
+      "Com a estratégia definida, desenvolvemos uma experiência visual que traduz sofisticação, confiança e solidez. Cada elemento é projetado para comunicar autoridade e diferenciar sua banca no mercado jurídico.",
+    value:
+      "Uma identidade própria que eleva a percepção de valor e fortalece sua reputação.",
+    image: method2,
+  },
+  {
+    id: "03",
+    title: "Desenvolvimento Proprietário e Infraestrutura",
+    content:
+      "Transformamos o projeto em uma plataforma de alta performance, construída sobre infraestrutura própria e sem dependência de soluções genéricas. Tudo é desenvolvido com foco em estabilidade, velocidade e segurança.",
+    value:
+      "Uma estrutura robusta preparada para operar com consistência e confiabilidade.",
+    image: method3,
+  },
+  {
+    id: "04",
+    title: "Implantação, Governança e Evolução Contínua",
+    content:
+      "Após a entrega, sua banca recebe um ativo digital independente e preparado para crescer. A estrutura permite futuras evoluções sem limitações técnicas ou dependência de plataformas de terceiros.",
+    value:
+      "Controle total sobre sua presença digital e liberdade para evoluir com previsibilidade.",
+    image: method4,
+  },
+];
 
   return (
     <section
