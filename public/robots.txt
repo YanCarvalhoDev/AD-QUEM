@@ -1,3 +1,18 @@
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GPTBot
+Disallow: /
+
 User-agent: SemrushBot
 User-agent: SemrushBot-SA
 User-agent: AhrefsBot
@@ -19,28 +34,13 @@ User-agent: ZoominfoBot
 User-agent: Mail.RU_Bot
 Disallow: /
 
-User-agent: GPTBot
-Allow: /
-
-User-agent: ChatGPT-User
-Allow: /
-
-User-agent: OAI-SearchBot
-Allow: /
-
-User-agent: ClaudeBot
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
 User-agent: *
 Allow: /
-
 Disallow: /api/
 Disallow: /admin/
 Disallow: /private/
 Disallow: /tmp/
 
+Content-Signal: search=yes, ai-input=yes, ai-train=no
 
 Sitemap: https://www.adquem.com.br/sitemap.xml
