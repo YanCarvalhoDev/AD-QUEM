@@ -23,6 +23,7 @@ if (!artigo) {
   return Astro.redirect('/404');
 }
 
+
 const {
   title,
   subtitle,
