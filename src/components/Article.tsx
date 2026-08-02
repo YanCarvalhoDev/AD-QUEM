@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
 
+
 // Definição das interfaces para tipagem do Keystatic
 interface Person {
   name: string;
