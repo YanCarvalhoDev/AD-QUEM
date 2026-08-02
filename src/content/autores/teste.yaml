@@ -1,0 +1,18 @@
+name: teste
+role: teste
+oab: 123/56 BA
+site: https://www.teste.com.br
+image: ../../assets/images/autores/teste/image.png
+bio: asdhnausihduashnda
+knowsAbout:
+  - Constitucional
+  - Trabalhista
+whatsapp: '74988774455'
+instagram: https://instagram.com
+email: teste@teste.com
+tiktok: https://www.tiktok.com/@tiktokbrasil?lang=pt-BR
+twitter: https://x.com/?lang=pt
+threads: https://www.threads.com/
+facebook: https://www.facebook.com/?locale=pt_BR
+youtube: https://www.youtube.com/
+featured: false

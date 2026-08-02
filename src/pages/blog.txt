@@ -1,0 +1,177 @@
+---
+// src/pages/blog.astro
+import '../styles/global.css';
+import MainLayout from '../layouts/MainLayout.astro';
+import BlogComponent from '../components/Blog';
+
+// 1. Inicializa o Reader oficial do Keystatic
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+
+const reader = createReader(
+  import.meta.env.DEV ? './' : process.cwd(), 
+  keystaticConfig
+);
+
+const imagens = import.meta.glob(
+  "/src/assets/images/artigos/**/*.{png,jpg,jpeg,webp,avif}",
+  {
+    eager: true,
+    import: "default",
+  }
+);
+
+// 2. Busca os slugs da coleção 'artigos' cadastrados no disco
+const slugs = await reader.collections.artigos.list();
+
+// 3. Lê os dados internos de cada artigo concorrentemente
+const artigosRaw = await Promise.all(
+  slugs.map(async (slug) => {
+    const data = await reader.collections.artigos.read(slug);
+    return { slug, data };
+  })
+);
+
+// Filtra por segurança caso haja algum arquivo corrompido ou nulo
+const artigosValidos = artigosRaw.filter(artigo => artigo.data !== null);
+
+// 4. Ordena os artigos por data (mais recente primeiro)
+const postsOrdenados = artigosValidos.sort((a, b) => {
+  const dataA = a.data?.date ? new Date(a.data.date).getTime() : 0;
+  const dataB = b.data?.date ? new Date(b.data.date).getTime() : 0;
+  return dataB - dataA;
+});
+
+// 5. Mapeia e higieniza as propriedades para o componente React de Alta Performance
+const postsProntos = await Promise.all(
+  postsOrdenados.map(async (item) => {
+    const post = item.data!;
+    
+    let nomesAutores = "Equipe";
+    if (post.authors?.length) {
+      const autores = await Promise.all(
+        post.authors.map((slug) => reader.collections.autores.read(slug))
+      );
+
+      nomesAutores = autores
+        .filter(Boolean)
+        .map((autor) => autor!.name)
+        .join(" | ");
+    }
+
+    let imagem = null;
+    if (post.heroImage) {
+      const caminho =
+        (typeof post.heroImage === "string"
+          ? post.heroImage
+          : post.heroImage.src
+        ).replace("../../assets", "/src/assets");
+
+      imagem = imagens[caminho] ?? null;
+    }
+
+    return {
+      id: item.slug,
+      slug: item.slug,
+      title: post.title || "Artigo sem título",
+      excerpt: post.subtitle || "",
+      category: post.category || "Insight",
+      author: nomesAutores,
+      date: post.date || new Date().toISOString(),
+      readTime: post.readingTime || "5 min",
+      image: imagem
+    };
+  })
+);
+
+const todasCategorias = postsProntos.map(p => p.category).filter(Boolean);
+const categoriasDinamicas = ["Todos", ...new Set(todasCategorias)];
+
+// 🌟 CONFIGURAÇÃO DE SEO E META TAGS DO BLOG 🌟
+const metaTitle = "Insights & Estratégia Jurídica | AdQuem";
+const metaDescription = "Exploramos a interseção entre engenharia de software de elite, performance computacional e arquitetura de marca premium através de artigos técnicos da nossa equipe.";
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://adquem.com.br");
+const ogImage = "https://adquem.com.br/AQ_og_blog.png"; // Altere para a imagem padrão do seu blog
+
+const blogSchema = {
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "@id": canonicalURL.href,
+  "headline": metaTitle,
+  "description": metaDescription,
+  "url": canonicalURL.href,
+  "inLanguage": "pt-BR",
+  "publisher": {
+    "@type": "Organization",
+    "name": "AdQuem",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://adquem.com.br/AQ_logo_g.png"
+    }
+  },
+  "blogPost": postsProntos.map((post) => ({
+    "@type": "BlogPosting",
+    "@id": `${canonicalURL.origin}/artigos/${post.slug}`,
+    "headline": post.title,
+    "description": post.excerpt,
+    "url": `${canonicalURL.origin}/artigos/${post.slug}`,
+    "datePublished": post.date,
+    "author": post.author.includes(" | ") 
+  ? post.author.split(" | ").map(nome => ({ "@type": "Person", "name": nome }))
+  : { "@type": "Person", "name": post.author }
+
+
+  }))
+};
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <link 
+      rel="preload" 
+      href="/fonts/inter-v20-latin-regular.woff2" 
+      as="font" 
+      type="font/woff2" 
+      crossorigin 
+    />
+    <link 
+      rel="preload" 
+      href="/fonts/instrument-serif-v5-latin-regular.woff2" 
+      as="font" 
+      type="font/woff2" 
+      crossorigin 
+    />
+    
+    <title>{metaTitle}</title>
+    <meta name="description" content={metaDescription} />
+    {todasCategorias.length > 0 && <meta name="keywords" content={[...new Set(todasCategorias)].join(", ")} />}
+    <link rel="canonical" href={canonicalURL.href} />
+    <meta name="robots" content="index, follow" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL.href} />
+    <meta property="og:title" content={metaTitle} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="AdQuem" />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalURL.href} />
+    <meta property="twitter:title" content={metaTitle} />
+    <meta property="twitter:description" content={metaDescription} />
+    <meta property="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(blogSchema)} />
+  </head>
+  <body>
+    <MainLayout title={metaTitle} description={metaDescription}>
+      <BlogComponent client:load postsDoKeystatic={postsProntos} categoriasDoKeystatic={categoriasDinamicas} />
+    </MainLayout>
+  </body>
+</html>

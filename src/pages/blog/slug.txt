@@ -1,0 +1,425 @@
+---
+// src/pages/blog/[slug].astro
+import { getCollection, getEntry, render } from 'astro:content';
+import { Clock, Calendar, Share2, Mail, Printer, ArrowLeft } from 'lucide-react';
+
+// Importações cruciais para o estilo e estrutura da AdQuem
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import ProgressIndicator from '../../components/ProgressIndicator';
+import '../../styles/global.css';
+
+export async function getStaticPaths() {
+  const artigos = await getCollection('artigos');
+  return artigos.map((artigo) => ({
+    params: { slug: artigo.id },
+    props: { artigo },
+  }));
+}
+
+const { artigo } = Astro.props;
+
+if (!artigo) {
+  return Astro.redirect('/404');
+}
+
+const {
+  title,
+  subtitle,
+  date,
+  readingTime,
+  quote,
+  authors,
+  category,
+  tags,
+} = artigo.data;
+
+const { Content } = await render(artigo);
+
+const dadosCategoria = category
+  ? await getEntry('categorias', category)
+  : null;
+
+const dadosAutores = authors
+  ? await Promise.all(
+      authors.map((authorSlug) =>
+        getEntry('autores', authorSlug).catch(() => null)
+      )
+    )
+  : [];
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://www.adquem.com.br');
+
+const dataFormatada = date
+  ? new Intl.DateTimeFormat('pt-BR', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      timeZone: 'UTC',
+    }).format(new Date(date))
+  : '';
+
+// ======================================================
+// ✅ RESOLUÇÃO LIMPA E INDEPENDENTE PARA PRODUÇÃO
+// ======================================================
+let ogImage = new URL('/og-image.jpg', Astro.site || 'https://www.adquem.com.br').toString();
+
+if (artigo.data.heroImage) {
+  if (typeof artigo.data.heroImage === 'string') {
+    ogImage = artigo.data.heroImage.startsWith('http')
+      ? artigo.data.heroImage
+      : new URL(artigo.data.heroImage, Astro.site || 'https://www.adquem.com.br').toString();
+  } else if (artigo.data.heroImage.src) {
+    // 1. Pega a string do caminho que o Astro já buildou e otimizou
+    const srcEstatico = typeof artigo.data.heroImage.src === 'string'
+      ? artigo.data.heroImage.src
+      : (artigo.data.heroImage.src as any).src || '';
+
+    if (srcEstatico) {
+      // 2. Remove apenas os parâmetros de query do Vite (?origWidth...)
+      const caminhoBuildado = srcEstatico.split('?')[0];
+      
+      // 3. Monta a URL final usando sempre o domínio real de produção
+      const dominioProducao = 'https://www.adquem.com.br';
+      
+      ogImage = caminhoBuildado.startsWith('http')
+        ? caminhoBuildado
+        : `${dominioProducao}${caminhoBuildado.startsWith('/') ? '' : '/'}${caminhoBuildado}`;
+    }
+  }
+}
+
+
+const dataISO = date ? new Date(date).toISOString() : new Date().toISOString();
+
+const metaTitle = `${title} | AdQuem`;
+const metaDescription = subtitle ?? `Leia o artigo "${title}" publicado pela AdQuem.`;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": title,
+  "description": metaDescription,
+  "image": [ogImage],
+  "datePublished": dataISO,
+  "dateModified": dataISO,
+   "author": dadosAutores
+    .filter(Boolean)
+    .map((autor) => {
+      const data = autor.data;
+      
+      // sameAs recebe apenas links de perfis/redes sociais
+      const redesSociais = [
+        data.linkedin,
+        data.instagram,
+        data.jusbrasil
+      ].filter(Boolean);
+
+      // Limpa os caracteres e garante o formato padrão internacional: +5511999999999
+      const apenasNumeros = data.whatsapp ? data.whatsapp.replace(/\D/g, '') : '';
+      const telefoneFormatado = apenasNumeros ? `+55${apenasNumeros}` : '';
+
+      return {
+        "@type": "Person",
+        "name": data.name,
+        "jobTitle": data.role || "Autor",
+        
+        ...(data.bio && { "description": data.bio }),
+        ...(data.email && { "email": data.email }),
+
+        ...(data.knowsAbout && data.knowsAbout.length > 0 && { "knowsAbout": data.knowsAbout }),
+        
+        // WhatsApp entra como um canal de telefone puro e padronizado
+        ...(telefoneFormatado && { "telephone": telefoneFormatado }),
+        
+        ...(redesSociais.length > 0 && { "sameAs": redesSociais }),
+        
+        ...(data.oab && {
+          "identifier": {
+            "@type": "PropertyValue",
+            "name": "OAB",
+            "value": data.oab
+          }
+        })
+      };
+    }),
+  "publisher": {
+    "@type": "Organization",
+    "name": "AdQuem",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.adquem.com.br/logo.png",
+    },
+  },
+  "articleSection": dadosCategoria?.data.name,
+  "keywords": tags?.join(", "),
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": canonicalURL.href,
+  },
+  "url": canonicalURL.href,
+  "inLanguage": "pt-BR",
+  "isAccessibleForFree": true,
+};
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <link 
+      rel="preload" 
+      href="/fonts/inter-v20-latin-regular.woff2" 
+      as="font" 
+      type="font/woff2" 
+      crossorigin 
+    />
+    <link 
+      rel="preload" 
+      href="/fonts/instrument-serif-v5-latin-regular.woff2" 
+      as="font" 
+      type="font/woff2" 
+      crossorigin 
+    />
+    
+    <title>{metaTitle}</title>
+    <meta name="description" content={metaDescription} />
+    {tags && tags.length > 0 && <meta name="keywords" content={tags.join(", ")} />}
+    <link rel="canonical" href={canonicalURL.href} />
+    <meta name="robots" content="index, follow" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={canonicalURL.href} />
+    <meta property="og:title" content={metaTitle} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="AdQuem" />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalURL.href} />
+    <meta property="twitter:title" content={metaTitle} />
+    <meta property="twitter:description" content={metaDescription} />
+    <meta property="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  </head>
+  
+  {/* body com as classes originais do seu Layout combinadas com as do seu Artigo */}
+  <body class="min-h-screen selection:bg-gold-pale selection:text-teal-deep bg-teal-deep">
+    <ProgressIndicator client:idle />
+    
+    <Header isDarkPage={true} client:idle />
+    
+    <main>
+      <div class="min-h-screen bg-white font-sans selection:bg-[#E6F4F6] text-black">
+        <main class="pb-40">
+
+          {/* Header do Artigo (Estilo Quiet Luxury / Teal) */}
+          <div class="bg-[#002B30] pt-32 pb-16 mb-20 relative overflow-hidden print:hidden">
+            <div class="absolute top-0 right-0 w-1/3 h-full bg-[#C5A880]/5 blur-[120px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+            <div class="container mx-auto max-w-6xl px-6 lg:px-20 relative z-10">
+              <nav class="flex items-center justify-between border-b border-white/15 pb-8">
+                <a href="/blog" class="flex items-center gap-2.5 text-white hover:text-[#C5A880] transition-colors group">
+                  <ArrowLeft size={16} class="group-hover:-translate-x-1.5 transition-transform" />
+                  <span class="text-[12px] font-bold uppercase tracking-[0.2em]">
+                    Voltar para Insights
+                  </span>
+                </a>
+
+                <div class="flex items-center gap-6 text-white/60">
+                  <button class="hover:text-white transition-colors" title="Compartilhar" id="btn-share">
+                    <Share2 size={18} />
+                  </button>
+
+                  <button class="hover:text-white transition-colors" title="Enviar por E-mail" id="btn-email">
+                    <Mail size={18} />
+                  </button>
+
+                  <button class="hover:text-white transition-colors" title="Imprimir" onclick="window.print()">
+                    <Printer size={18} />
+                  </button>
+
+                  <div class="w-px h-4 bg-white/20"></div>
+
+                  
+                </div>
+              </nav>
+            </div>
+          </div>
+          
+          <article class="container mx-auto max-w-6xl px-6 lg:px-20">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+
+              {/* Rail Lateral de Metadados */}
+              <aside class="lg:col-span-3 space-y-12">
+                <div class="space-y-10">
+                  <div class="grid grid-cols-2 lg:grid-cols-1 gap-6 border-t border-gray-100 pt-6">
+
+                    <div>
+                      <h4 class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.25em] mb-2">
+                        Tempo de Leitura
+                      </h4>
+                      <div class="flex items-center gap-2 text-[#002B30] font-bold text-xs uppercase tracking-wider">
+                        <Clock size={14} class="text-[#005F6B]" />
+                        <span>{readingTime || "5 mins"}</span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.25em] mb-2">
+                        Publicado em
+                      </h4>
+                      <div class="flex items-center gap-2 text-[#002B30] font-bold text-xs uppercase tracking-wider">
+                        <Calendar size={14} class="text-[#005F6B]" />
+                        <span>{dataFormatada}</span>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  {dadosAutores.length > 0 && (
+  <div class="border-t border-gray-100 pt-8">
+    <h4 class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.25em] mb-6">
+      Autores
+    </h4>
+    <div class="space-y-6">
+      {dadosAutores.map((autor) => {
+        if (!autor || !autor.data) return null;
+        return (
+          <div class="group">
+            <div class="flex items-center gap-4">
+              {autor.data.image && (
+                <img
+                  src={typeof autor.data.image === "string" ? autor.data.image : autor.data.image.src}
+                  alt={autor.data.name}
+                  class="w-14 h-14 rounded-full object-cover object-top grayscale group-hover:grayscale-0 transition-all shadow-sm shrink-0"
+                />
+              )}
+              <div class="space-y-0.5">
+                <a href={`/autores/${autor.id}`} class="block hover:underline decoration-[#C5A880] underline-offset-2">
+                  <p class="text-sm lg:text-base font-bold text-[#002B30] group-hover:text-[#C5A880] transition-colors leading-tight">
+                    {autor.data.name}
+                  </p>
+                </a>
+                <p class="text-xs text-gray-400 tracking-wider font-light">
+                  {autor.data.role}
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+)}
+
+                </div>
+              </aside>
+
+              {/* Conteúdo Principal */}
+              <div class="lg:col-span-9">
+                <div class="mb-14">
+                  {dadosCategoria && (
+                    <span class="inline-block text-[10px] font-bold text-[#005F6B] uppercase tracking-[0.3em] mb-6">
+                      {dadosCategoria.data.name.toUpperCase()}
+                    </span>
+                  )}
+
+                  <h1 class="text-4xl lg:text-[56px] font-bold text-[#002B30] leading-[1.1] tracking-tight mb-8">
+                    {title}
+                  </h1>
+
+                  {subtitle && (
+                    <p class="text-lg lg:text-xl text-black leading-relaxed font-light mb-8 border-b border-gray-100 pb-10">
+                      {subtitle}
+                    </p>
+                  )}
+                </div>
+
+                {quote && (
+                  <blockquote class="border-l-4 border-[#C5A880] italic pl-6 text-xl my-8 text-gray-700 leading-relaxed font-serif">
+                    "{quote}"
+                  </blockquote>
+                )}
+
+                <div
+                  class="prose max-w-none text-black text-lg leading-[1.8]
+                  [&_p]:text-black
+                  [&_p]:font-normal
+                  [&_p]:mb-8
+                  [&_p]:leading-[1.8]
+                  [&_strong]:text-black
+                  [&_strong]:font-bold
+                  [&_h2]:text-[#002B30]
+                  [&_h2]:font-bold
+                  [&_h2]:leading-tight
+                  [&_h2]:mt-14
+                  [&_h2]:mb-6
+                  [&_h2]:text-3xl
+                  [&_h3]:text-[#005F6B]
+                  [&_h3]:font-bold
+                  [&_h3]:mt-10
+                  [&_h3]:mb-4
+                  [&_h3]:text-xl
+                  [&_ul]:list-disc
+                  [&_ul]:pl-6
+                  [&_ul]:mb-8
+                  [&_ol]:list-decimal
+                  [&_ol]:pl-6
+                  [&_ol]:mb-8
+                  [&_img]:rounded-2xl
+                  [&_img]:my-8
+                  [&_img]:w-full
+                  [&_img]:h-auto"
+                >
+                  <Content />
+                </div>
+
+                {tags && tags.length > 0 && (
+                  <div class="mt-12 pt-8 border-t border-gray-100 flex flex-wrap gap-2 print:hidden">
+                    {tags.map((tag) => (
+                      <span class="px-4 py-1.5 bg-gray-50 rounded-full text-[11px] font-medium text-gray-500 border border-gray-100">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+            </div>
+          </article>
+
+        </main>
+      </div>
+    </main>
+
+    <Footer client:visible />
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --accent: #C0B283;
+  }
+</style>
+
+<script>
+  const btnShare = document.getElementById("btn-share");
+  if (btnShare) {
+    btnShare.addEventListener("click", async () => {
+      try {
+        await navigator.share({
+          title: document.title,
+          url: window.location.href,
+        });
+      } catch {
+        navigator.clipboard.writeText(window.location.href);
+        alert("Link copiado para a área de transferência!");
+      }
+    });
+  }
+</script>

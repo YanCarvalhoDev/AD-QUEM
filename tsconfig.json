@@ -1,0 +1,28 @@
+// {
+//   "extends": "astro/tsconfigs/strictest",
+//   "compilerOptions": {
+//     "baseUrl": ".",
+//     "paths": {
+//       "@/*": [
+//         "src/*"
+//       ]
+//     },
+//     "jsx": "react-jsx",
+//     "jsxImportSource": "react"
+//   },
+//   "include": [
+//     "./worker-configuration.d.ts"
+//   ]
+// }
+{
+  "extends": "astro/tsconfigs/strictest",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
+  },
+  "include": ["src/**/*", ".astro/types.d.ts", "./worker-configuration.d.ts"]
+}
