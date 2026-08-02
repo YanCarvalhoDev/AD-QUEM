@@ -8,13 +8,20 @@ import BlogComponent from '../components/Blog';
 // 🌟 2. Importa o motor nativo de coleções do Astro 6
 import { getCollection } from 'astro:content';
 
-const imagens = import.meta.glob(
-  "/src/assets/images/artigos/**/*.{png,jpg,jpeg,webp,avif}",
-  {
-    eager: true,
-    import: "default",
-  }
-);
+//const imagens = import.meta.glob(
+//  "/src/assets/images/artigos/**/*.{png,jpg,jpeg,webp,avif}",
+ // {
+  //  eager: true,
+ //   import: "default",
+//  }
+//);
+
+//  AGORA (Ajustado para o build do Linux resolver o caminho relativo com segurança)
+const imagens = import.meta.glob("../assets/images/artigos/**/*.{png,jpg,jpeg,webp,avif}", {
+  eager: true,
+  import: "default",
+});
+
 
 // 3. Busca os artigos usando o Content Layer nativo do Astro 6
 const artigosRaw = await getCollection('artigos');
@@ -41,16 +48,27 @@ const postsProntos = await Promise.all(
         .join(" | ") || "Equipe";
     }
 
-    let imagem = null;
-    if (post.heroImage) {
-      const srcOriginal = typeof post.heroImage === "string" ? post.heroImage : post.heroImage.src;
+    //let imagem = null;
+   // if (post.heroImage) {
+     // const srcOriginal = typeof post.heroImage === "string" ? post.heroImage : post.heroImage.src;
       // Garante a compatibilidade de caminhos entre o Keystatic e o Vite
-      const caminho = typeof srcOriginal === "string" 
-        ? srcOriginal.replace("../../assets", "/src/assets") 
-        : srcOriginal;
+     // const caminho = typeof srcOriginal === "string" 
+      //  ? srcOriginal.replace("../../assets", "/src/assets") 
+      //  : srcOriginal;
         
-      imagem = imagens[caminho] ?? null;
-    }
+    //  imagem = imagens[caminho] ?? null;
+  //  }
+let imagem = null;
+if (post.heroImage) {
+  const srcOriginal = typeof post.heroImage === "string" ? post.heroImage : post.heroImage.src;
+  
+  // Ajusta a string para bater exatamente com a chave do seu import.meta.glob acima
+  const caminho = typeof srcOriginal === "string" 
+    ? srcOriginal.replace("../../assets", "../assets") // mudamos para bater com '../assets'
+    : srcOriginal;
+    
+  imagem = imagens[caminho] ?? null;
+}
 
     return {
       id: item.id, // Chave única gerada pelo loader glob do Astro 6
