@@ -1,22 +1,12 @@
 ---
-export const prerender = true;
-// src/pages/blog.astro
+export const prerender = true; // 🌟 1. Força o build estático para embutir os dados dos artigos
+
 import '../styles/global.css';
 import MainLayout from '../layouts/MainLayout.astro';
 import BlogComponent from '../components/Blog'; 
 
-
-// 1. Inicializa o Reader oficial do Keystatic
-import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../keystatic.config';
-
-//  Ajustado para ler a raiz com segurança tanto em DEV quanto no BUILD da Cloudflare
-const reader = createReader('./', keystaticConfig);
-
-//const reader = createReader(
-// import.meta.env.DEV ? './' : process.cwd(), 
-// keystaticConfig
-//);
+// 🌟 2. Importa o motor nativo de coleções do Astro 6
+import { getCollection } from 'astro:content';
 
 const imagens = import.meta.glob(
   "/src/assets/images/artigos/**/*.{png,jpg,jpeg,webp,avif}",
@@ -26,58 +16,45 @@ const imagens = import.meta.glob(
   }
 );
 
-// 2. Busca os slugs da coleção 'artigos' cadastrados no disco
-const slugs = await reader.collections.artigos.list();
-
-// 3. Lê os dados internos de cada artigo concorrentemente
-const artigosRaw = await Promise.all(
-  slugs.map(async (slug) => {
-    const data = await reader.collections.artigos.read(slug);
-    return { slug, data };
-  })
-);
-
-// Filtra por segurança caso haja algum arquivo corrompido ou nulo
-const artigosValidos = artigosRaw.filter(artigo => artigo.data !== null);
+// 3. Busca os artigos usando o Content Layer nativo do Astro 6
+const artigosRaw = await getCollection('artigos');
 
 // 4. Ordena os artigos por data (mais recente primeiro)
-const postsOrdenados = artigosValidos.sort((a, b) => {
+const postsOrdenados = artigosRaw.sort((a, b) => {
   const dataA = a.data?.date ? new Date(a.data.date).getTime() : 0;
   const dataB = b.data?.date ? new Date(b.data.date).getTime() : 0;
   return dataB - dataA;
 });
 
-// 5. Mapeia e higieniza as propriedades para o componente React de Alta Performance
+// 5. Mapeia e higieniza as propriedades mantendo total compatibilidade com seu componente React
 const postsProntos = await Promise.all(
   postsOrdenados.map(async (item) => {
-    const post = item.data!;
+    const post = item.data;
     
+    // Busca os autores correspondentes na coleção nativa do Astro 6
     let nomesAutores = "Equipe";
     if (post.authors?.length) {
-      const autores = await Promise.all(
-        post.authors.map((slug) => reader.collections.autores.read(slug))
-      );
-
-      nomesAutores = autores
-        .filter(Boolean)
-        .map((autor) => autor!.name)
-        .join(" | ");
+      const todosAutores = await getCollection('autores');
+      nomesAutores = todosAutores
+        .filter(autor => post.authors.includes(autor.id)) // O loader glob do Astro 6 usa 'id' como chave do slug
+        .map(autor => autor.data.name)
+        .join(" | ") || "Equipe";
     }
 
     let imagem = null;
     if (post.heroImage) {
-      const caminho =
-        (typeof post.heroImage === "string"
-          ? post.heroImage
-          : post.heroImage.src
-        ).replace("../../assets", "/src/assets");
-
+      const srcOriginal = typeof post.heroImage === "string" ? post.heroImage : post.heroImage.src;
+      // Garante a compatibilidade de caminhos entre o Keystatic e o Vite
+      const caminho = typeof srcOriginal === "string" 
+        ? srcOriginal.replace("../../assets", "/src/assets") 
+        : srcOriginal;
+        
       imagem = imagens[caminho] ?? null;
     }
 
     return {
-      id: item.slug,
-      slug: item.slug,
+      id: item.id, // Chave única gerada pelo loader glob do Astro 6
+      slug: item.id,
       title: post.title || "Artigo sem título",
       excerpt: post.subtitle || "",
       category: post.category || "Insight",
