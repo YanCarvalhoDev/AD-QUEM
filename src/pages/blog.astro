@@ -130,6 +130,7 @@ const blogSchema = {
 };
 ---
 
+
 <!doctype html>
 <html lang="pt-BR">
   <head>
@@ -174,9 +175,17 @@ const blogSchema = {
 
     <script type="application/ld+json" set:html={JSON.stringify(blogSchema)} />
   </head>
-  <body>
+<body>
+    <!-- 1. Teste o Layout Puro (Se o Header/Footer aparecerem, o Keystatic está funcionando) -->
     <MainLayout title={metaTitle} description={metaDescription}>
-      <BlogComponent client:load postsDoKeystatic={postsProntos} categoriasDoKeystatic={categoriasDinamicas} />
+      <div style="padding: 100px; text-align: center; background: #fff; color: #000;">
+        <h1>O Layout do Blog carregou!</h1>
+        <p>Quantidade de posts processados: {postsProntos.length}</p>
+      </div>
     </MainLayout>
+
+    <!-- 2. Comente temporariamente o componente React para testar -->
+    <!-- <BlogComponent client:load postsDoKeystatic={postsProntos} categoriasDoKeystatic={categoriasDinamicas} /> -->
   </body>
 </html>
+  
