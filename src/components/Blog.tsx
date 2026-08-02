@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import type { ImageMetadata } from "astro";
 
+
 interface KeystaticPost {
   id: string;
   slug: string;
@@ -19,7 +20,6 @@ interface KeystaticPost {
   author: string;
   date: string;
   readTime: string;
-  // image: string;
   image: ImageMetadata | null;
 }
 
