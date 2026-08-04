@@ -31,8 +31,11 @@ const postsProntos = await Promise.all(
     }
 
     // 🌟 CORREÇÃO DEFINITIVA: Extrai o objeto de imagem processado nativamente pelo Astro 6
-    let imagemPronta = null;
-   const imagemPronta = post.heroImage ?? null;
+    const imagemPronta =
+  typeof post.heroImage === "object"
+    ? post.heroImage?.src
+    : post.heroImage ?? null;
+
 
     return {
       id: item.id,
@@ -50,13 +53,14 @@ const postsProntos = await Promise.all(
 
 const todasCategorias = postsProntos.map(p => p.category).filter(Boolean);
 console.log(
+  "POSTS BLOG:",
   postsProntos.map((p) => ({
     slug: p.slug,
     image: p.image,
-    imageType: typeof p.image,
-    imageSrc: p.image?.src,
+    type: typeof p.image,
   }))
 );
+
 
 const categoriasDinamicas = ["Todos", ...new Set(todasCategorias)];
 
