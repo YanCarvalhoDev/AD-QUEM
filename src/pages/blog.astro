@@ -32,14 +32,7 @@ const postsProntos = await Promise.all(
 
     // 🌟 CORREÇÃO DEFINITIVA: Extrai o objeto de imagem processado nativamente pelo Astro 6
     let imagemPronta = null;
-    if (post.heroImage) {
-      if (typeof post.heroImage === 'string') {
-        imagemPronta = post.heroImage;
-      } else if (post.heroImage && typeof post.heroImage === 'object') {
-        // Passa o objeto completo ou a propriedade extraída com segurança para o React
-        imagemPronta = post.heroImage.src || post.heroImage;
-      }
-    }
+   const imagemPronta = post.heroImage ?? null;
 
     return {
       id: item.id,
@@ -56,6 +49,15 @@ const postsProntos = await Promise.all(
 );
 
 const todasCategorias = postsProntos.map(p => p.category).filter(Boolean);
+console.log(
+  postsProntos.map((p) => ({
+    slug: p.slug,
+    image: p.image,
+    imageType: typeof p.image,
+    imageSrc: p.image?.src,
+  }))
+);
+
 const categoriasDinamicas = ["Todos", ...new Set(todasCategorias)];
 
 // 🌟 CONFIGURAÇÃO DE SEO E META TAGS DO BLOG 🌟
