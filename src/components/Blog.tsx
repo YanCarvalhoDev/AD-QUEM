@@ -8,9 +8,20 @@ import {
   ArrowLeft,
   Clock,
 } from "lucide-react";
-import type { ImageMetadata } from "astro";
+// import type { ImageMetadata } from "astro";
 
 
+// interface KeystaticPost {
+//   id: string;
+//   slug: string;
+//   title: string;
+//   excerpt: string;
+//   category: string;
+//   author: string;
+//   date: string;
+//   readTime: string;
+//   image: ImageMetadata | null;
+// }
 interface KeystaticPost {
   id: string;
   slug: string;
@@ -20,8 +31,9 @@ interface KeystaticPost {
   author: string;
   date: string;
   readTime: string;
-  image: ImageMetadata | null;
+  image: string | null;
 }
+
 
 interface BlogProps {
   postsDoKeystatic?: KeystaticPost[];
@@ -165,7 +177,7 @@ export default function Blog({
                 >
                   <a href={`/blog/${post.slug}`} className="block h-full">
                     <div className="relative aspect-[4/3] rounded-[32px] overflow-hidden mb-8 border border-gray-100 shadow-sm bg-gray-50">
-                      {post.image && (
+                      /* {post.image && (
                         <img
                           src={post.image?.src}
                           width={post.image?.width}
@@ -174,7 +186,17 @@ export default function Blog({
                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                           loading="lazy"
                         />
-                      )}
+                      )} */
+                      
+                      {post.image && (
+  <img
+    src={post.image}
+    alt={post.title}
+    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+    loading="lazy"
+  />
+)}
+
                       <div className="absolute inset-0 bg-gradient-to-t from-[#002B30]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       <div className="absolute top-6 left-6">
                         <span className="px-4 py-1.5 bg-white/95 backdrop-blur-md rounded-full text-[10px] font-bold text-[#002B30] uppercase tracking-widest shadow-sm">
