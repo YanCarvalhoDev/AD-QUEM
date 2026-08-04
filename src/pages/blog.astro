@@ -1,4 +1,5 @@
 ---
+// src/pages/blog.astro
 export const prerender = true;
 
 import '../styles/global.css';
@@ -6,14 +7,7 @@ import MainLayout from '../layouts/MainLayout.astro';
 import BlogComponent from '../components/Blog'; 
 import { getCollection } from 'astro:content';
 
-// 🌟 CORREÇÃO 1: Mapeia todas as imagens da pasta do blog usando o alias da raiz
-const imagens = import.meta.glob(
-  "/src/assets/images/artigos/**/*.{png,jpg,jpeg,webp,avif,PNG,JPG,JPEG,WEBP,AVIF}",
-  {
-    eager: true,
-    import: "default",
-  }
-);
+// 🌟 REMOVIDO: import.meta.glob (Não é necessário porque o Astro 6 já resolve as imagens nativamente)
 
 const artigosRaw = await getCollection('artigos');
 
@@ -36,18 +30,14 @@ const postsProntos = await Promise.all(
         .join(" | ") || "Equipe";
     }
 
-    // 🌟 CORREÇÃO 2: Ajuste perfeito do caminho para bater com as chaves do Vite
-    let imagem = null;
+    // 🌟 CORREÇÃO DEFINITIVA: Extrai o objeto de imagem processado nativamente pelo Astro 6
+    let imagemPronta = null;
     if (post.heroImage) {
-      const srcOriginal = typeof post.heroImage === "string" ? post.heroImage : post.heroImage.src;
-      
-      if (typeof srcOriginal === "string") {
-        // O Keystatic salva como: "../../assets/images/artigos/foto.webp"
-        // Transformamos estritamente para: "/src/assets/images/artigos/foto.webp"
-        const caminhoFormatado = srcOriginal.replace("../../assets", "/src/assets");
-        
-        // Busca no dicionário do Vite
-        imagem = imagens[caminhoFormatado] ?? null;
+      if (typeof post.heroImage === 'string') {
+        imagemPronta = post.heroImage;
+      } else if (post.heroImage && typeof post.heroImage === 'object') {
+        // Passa o objeto completo ou a propriedade extraída com segurança para o React
+        imagemPronta = post.heroImage.src || post.heroImage;
       }
     }
 
@@ -60,7 +50,7 @@ const postsProntos = await Promise.all(
       author: nomesAutores,
       date: post.date || new Date().toISOString(),
       readTime: post.readingTime || "5 min",
-      image: imagem // Se achar, envia o objeto processado pelo Vite; se não, envia null
+      image: imagemPronta // Envia o objeto limpo ou a string direto para o React
     };
   })
 );
