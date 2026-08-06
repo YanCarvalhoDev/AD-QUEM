@@ -14,6 +14,6 @@ export const INTERNAL_LINKS = {
   aplicacao: "#aplicacao",
   propostaProfissional: "#proposta-profissional",
   privacidade: "/privacidade",
-  termos: "/termos",
-  blog: "/blog", 
+  blog: "blog",
+  autores: "autores", 
 };
