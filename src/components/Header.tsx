@@ -1305,8 +1305,10 @@ export default function Header({ isDarkPage = false }: HeaderProps) {
                               className="overflow-hidden mt-4 grid grid-cols-1 gap-4 pl-4"
                             >
                               {insightsData.map((insight, idx) => (
-                                <div
+                                <a
                                   key={idx}
+                                  href={insight.href}
+                                  onClick={() => setIsOpen(false)}
                                   className="flex items-center gap-3"
                                 >
                                   <div className="text-[#00A3B1]">
@@ -1320,7 +1322,7 @@ export default function Header({ isDarkPage = false }: HeaderProps) {
                                       {insight.desc}
                                     </p>
                                   </div>
-                                </div>
+                                </a>
                               ))}
                             </motion.div>
                           )}
