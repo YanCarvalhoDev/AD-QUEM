@@ -13,13 +13,14 @@
     "generate-types": "wrangler types"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^13.2.2",
-    "@astrojs/markdoc": "^1.0.6",
+    "@astrojs/cloudflare": "^14.2.3",
+    "@astrojs/markdoc": "^2.0.8",
     "@astrojs/react": "^5.0.4",
-    "@keystatic/astro": "latest",
+    "@astrojs/sitemap": "^3.7.3",
+    "@keystatic/astro": "^6.0.0",
     "@keystatic/core": "latest",
     "@tailwindcss/vite": "^4.2.4",
-    "astro": "^6.4.4",
+    "astro": "^7.2.4",
     "lucide-react": "^1.11.0",
     "motion": "^12.38.0",
     "ogl": "^1.0.11",

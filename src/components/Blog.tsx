@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import type { ImageMetadata } from "astro";
 
-
 interface KeystaticPost {
   id: string;
   slug: string;
@@ -20,6 +19,7 @@ interface KeystaticPost {
   author: string;
   date: string;
   readTime: string;
+  // image: string;
   image: ImageMetadata | null;
 }
 
@@ -79,21 +79,22 @@ export default function Blog({
   return (
     <div className="min-h-screen bg-white font-sans selection:bg-[#E6F4F6] text-black">
       {/* Hero Section */}
-      <section className="bg-[#002B30] pt-48 pb-24 px-6 lg:px-20 relative overflow-hidden">
+      <section className="bg-[#002B30] pt-28 pb-24 px-6 lg:px-20 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/3 h-full bg-[#C5A880]/5 blur-[120px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
         <div className="container mx-auto max-w-6xl relative z-10">
           <span className="text-[#C5A880] font-mono text-xs tracking-[0.3em] uppercase mb-6 block font-bold">
-            Insights & Estratégia
+            Conhecimento
           </span>
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold leading-tight mb-8 text-white">
-            Reflexões sobre <br />
+            Ideias que transformam
+            <br />
             <span className="text-[#C5A880] italic font-normal font-serif">
-              Estratégia & Técnica
+              o mercado jurídico
             </span>
           </h1>
           <p className="text-xl text-white/60 leading-relaxed max-w-2xl font-light tracking-wide">
-            Exploramos a interseção entre engenharia de software de elite,
-            performance computacional e arquitetura de marca premium.
+            Conteúdo produzido por profissionais que acompanham as mudanças que
+            estão redefinindo o mercado jurídico.
           </p>
         </div>
       </section>
@@ -143,7 +144,7 @@ export default function Blog({
       </section>
 
       {/* Grid de Cards */}
-      <section className="container mx-auto max-w-6xl px-6 lg:px-20 pt-20 pb-32">
+      <section className="container mx-auto max-w-7xl px-6 lg:px-20 pt-20 pb-32">
         {currentPosts.length === 0 ? (
           <div className="text-center py-20 border border-dashed border-gray-100 rounded-[32px]">
             <p className="text-gray-400 font-medium">
@@ -174,8 +175,7 @@ export default function Blog({
                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                           loading="lazy"
                         />
-                      )} 
-
+                      )}
                       <div className="absolute inset-0 bg-gradient-to-t from-[#002B30]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       <div className="absolute top-6 left-6">
                         <span className="px-4 py-1.5 bg-white/95 backdrop-blur-md rounded-full text-[10px] font-bold text-[#002B30] uppercase tracking-widest shadow-sm">

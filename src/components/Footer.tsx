@@ -235,7 +235,7 @@ export default function Footer() {
             © 2026 AD QUEM. Todos os direitos reservados.
           </p>
           <p className="text-[10px] uppercase tracking-widest text-sandstone/70 font-bold">
-            Desenvolvido com Precisão Algorítmica.
+            Presença à altura da sua reputação.
           </p>
         </div>
       </div>

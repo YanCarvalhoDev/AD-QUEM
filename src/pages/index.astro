@@ -15,9 +15,11 @@ import { Image, getImage , Picture } from 'astro:assets';
 import heroImg from '../assets/images/sp3.webp';
 import heroImgMobile from '../assets/images/sp3m.webp';
 import finalBg from '../assets/images/finalBg.webp';
-import imgFounder1 from '../assets/images/Yan-Carvalho.webp';
-import imgFounder2 from '../assets/images/yan-carvalho2.webp';
-import imgFounder3 from '../assets/images/yan-carvalho3.webp';
+import imgFounder1 from '../assets/images/yan-carvalho.webp';
+import imgFounder2 from '../assets/images/mockup_site.webp';
+import imgFounder3 from '../assets/images/diagrams.webp';
+import imgFounder4 from '../assets/images/editorial.webp';
+import imgFounder5 from '../assets/images/method4.webp';
 
 import { FeaturedGrid } from '../components/FeaturedGrid';
 
@@ -45,7 +47,7 @@ const mobileImg = await getImage({ src: heroImgMobile, width: 600, format: 'webp
     </picture>
   </Hero>
   <EngineeringFoundation client:visible />
-  <!--
+  <ROISection client:visible />
   <FeaturedGrid client:visible 
   links={{
     about: '/institucional/sobre',
@@ -53,13 +55,13 @@ const mobileImg = await getImage({ src: heroImgMobile, width: 600, format: 'webp
     contact: '/fale-conosco',
     careers: '/trabalhe-conosco'
   }} 
-/> -->
-    <ScrollAnimation client:visible /> 
+/> 
+    <!--<ScrollAnimation client:visible /> -->
  <!-- <Portfolio client:visible /> -->
-  <ROISection client:visible />
-  <SocialProof client:visible />
+  
+   <!-- <SocialProof client:visible /> -->
   <MethodSection client:visible />
-  <FinalCTA client:visible >
+  <!-- <FinalCTA client:visible >
     <Image
       src={finalBg}
       alt="Arquitetura corporativa de alto padrão simbolizando o sucesso das bancas parceiras"
@@ -68,29 +70,29 @@ const mobileImg = await getImage({ src: heroImgMobile, width: 600, format: 'webp
       loading="lazy"
       class="w-full h-full object-cover brightness-110 contrast-110"
     />
-  </FinalCTA>
+  </FinalCTA> -->
   <Founder client:visible={{ rootMargin: '1700px' }} >
       <Image 
       src={imgFounder1} 
-      alt="Eng. Yan Carvalho - 1" 
+      alt="Retrato em close-up de Yan Almeida de Carvalho (Yan Carvalho), criador da Ad Quem, com cabelo cacheado escuro, barba curta e terno escuro sobre blusa de gola alta, posando contra um fundo azul esverdeado iluminado por luz natural." 
       widths={[300, 600]} 
       sizes="(max-width: 768px) 300px, 600px"
       quality={70}
-      class="w-full h-full object-cover grayscale brightness-90 hover:brightness-110 transition-all duration-700"
+      class="w-full h-full object-cover grayscale brightness-90 hover:brightness-90 hover:grayscale-0 transition-all duration-700"
       slot="image1" 
     />
     <Image 
       src={imgFounder2} 
-      alt="Eng. Yan Carvalho - 2" 
+      alt="Notebook em cima de uma mesa de madeira exibindo na tela o site de advocacia de Nathalie Almeida, com texto em destaque e a foto de uma advogada sentada em seu escritório." 
       widths={[200, 400]} 
       sizes="(max-width: 768px) 200px, 400px"
       quality={70}
-      class="w-full h-full object-cover grayscale contrast-110 brightness-75 hover:brightness-100 transition-all duration-700"
+      class="w-full h-full object-cover grayscale contrast-110 brightness-75 hover:grayscale-0 transition-all duration-700"
       slot="image2" 
     />
     <Image 
       src={imgFounder3} 
-      alt="Eng. Yan Carvalho - 3" 
+      alt="Quadro de cortiça em um escritório moderno com post-its coloridos, papéis e fluxogramas organizados sobre etapas de desenvolvimento, como arquitetura de informação, UI/UX design e testes, acima de uma mesa de madeira limpa." 
       widths={[150, 300]} 
       sizes="(max-width: 768px) 150px, 300px"
       quality={60}
@@ -98,8 +100,8 @@ const mobileImg = await getImage({ src: heroImgMobile, width: 600, format: 'webp
       slot="image3" 
     />
     <Image 
-      src={imgFounder3} 
-      alt="Eng. Yan Carvalho - 4" 
+      src={imgFounder4} 
+      alt="Vista superior de uma mesa branca minimalista da Ad Quem, organizada com um notebook preto fechado, cadernos, bloco de anotações com caneta preta, papéis impressos com diagramas e uma luminária de mesa preta articulada." 
       widths={[100, 200]} 
       sizes="100px"
       quality={50}
@@ -107,8 +109,8 @@ const mobileImg = await getImage({ src: heroImgMobile, width: 600, format: 'webp
       slot="image4" 
     />
     <Image 
-      src={imgFounder3} 
-      alt="Eng. Yan Carvalho - 5" 
+      src={imgFounder5} 
+      alt="Corredor moderno de escritório com divisórias de vidro e estruturas metálicas pretas, piso cinza polido e salas com sofás e luminárias pendentes." 
       widths={[80, 160]} 
       sizes="80px"
       quality={50}
@@ -117,5 +119,5 @@ const mobileImg = await getImage({ src: heroImgMobile, width: 600, format: 'webp
     />
   </Founder>
   <FAQ client:visible />
-  <ContactForm client:visible />
+  <!-- <ContactForm client:visible /> -->
 </MainLayout>

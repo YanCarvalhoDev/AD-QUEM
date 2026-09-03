@@ -154,35 +154,48 @@ const autoresSchema = {
     <main>
       <div class="min-h-screen bg-white font-sans text-black">
         
-        <section class="bg-[#002B30] pt-48 pb-24 px-6 lg:px-20 relative overflow-hidden">
+        <section class="bg-[#002B30] pt-28 pb-24 px-6 lg:px-20 relative overflow-hidden">
           <div class="absolute top-0 right-0 w-1/3 h-full bg-[#C5A880]/5 blur-[120px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
           <div class="container mx-auto max-w-6xl relative z-10">
             <span class="text-[#C5A880] font-mono text-xs tracking-[0.3em] uppercase mb-6 block font-bold">
-              Quiet Authority
+              Autores
             </span>
             <h1 class="text-4xl sm:text-5xl md:text-7xl font-bold leading-tight mb-8 text-white">
-              Nossos <br />
-              <span class="text-[#C5A880] italic font-normal font-serif">Especialistas</span>
+              Quem constrói o conhecimento da<br />
+              <span class="text-[#C5A880] italic font-normal font-serif">Ad Quem</span>
             </h1>
-            <p class="text-xl text-white/60 leading-relaxed max-w-2xl font-light tracking-wide">
-              Conectamos a precisão técnica do direito corporativo de alta performance à inteligência estratégica das marcas de luxo.
+            <p class="text-xl text-white/60 leading-relaxed max-w-3xl font-light tracking-wide">
+              Advogados, mestres, doutores e especialistas que compartilham perspectivas sobre Direito, tecnologia e transformação do mercado jurídico.
             </p>
           </div>
         </section>
 
-        <section class="container mx-auto max-w-6xl px-6 lg:px-20 pt-20 pb-32">
+        <section class="container mx-auto max-w-8xl px-6 lg:px-20 pt-20 pb-32">
           {autoresOrdenados.length === 0 ? (
             <div class="text-center py-20 border border-dashed border-gray-100 rounded-[32px]">
               <p class="text-gray-400 font-medium">Nenhum autor cadastrado no sistema.</p>
             </div>
           ) : (
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20">
+            <div class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-4 gap-y-20">
               {autoresOrdenados.map((autor) => (
                 <div class="group flex flex-col justify-between bg-white rounded-[32px] border border-gray-100 p-6 sm:p-8 shadow-sm hover:shadow-md transition-all duration-300 relative">
                   
                   {autor.featured && (
                     <div class="absolute top-6 right-6 flex items-center gap-1.5 px-3 py-1 bg-[#C5A880]/10 text-[#C5A880] rounded-full text-[10px] font-bold uppercase tracking-wider z-20">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 9.7a1 1 0 0 1-.68 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 .76-.97l8-2a1 1 0 0 1 .48 0l8 2A1 1 0 0 1 20 6z"/></svg>
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        width="10" 
+                        height="10" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        stroke-width="2.5" 
+                        stroke-linecap="round" 
+                        stroke-linejoin="round"
+                      >
+                        <circle cx="12" cy="8" r="7" />
+                        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+                      </svg>
                       Destaque
                     </div>
                   )}
@@ -208,7 +221,7 @@ const autoresSchema = {
                       </div>
                       
                       <div class="text-center sm:text-left">
-                        <h2 class="text-2xl font-bold text-[#002B30] tracking-tight group-hover:text-[#C5A880] transition-colors duration-300">
+                        <h2 class="text-2xl font-bold text-[#002B30] tracking-wide group-hover:text-[#C5A880] transition-colors duration-300">
                           {autor.name}
                         </h2>
                         <p class="text-sm font-medium text-gray-400 mt-0.5">
@@ -261,7 +274,10 @@ const autoresSchema = {
                       )}
                       {autor.redes.jusbrasil && (
                         <a href={autor.redes.jusbrasil} target="_blank" rel="noopener noreferrer" class="w-9 h-9 sm:w-8 sm:h-8 rounded-full bg-gray-50 flex items-center justify-center text-xs font-serif font-bold text-gray-400 hover:bg-[#002B30] hover:text-white transition-all duration-300" title="Jusbrasil">
-                          Jb
+                          <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="w-5 h-5 fill-current">
+                        <path d="M12 3.5L3.5 18.5H7.5L12 10.5L16.5 18.5H20.5L12 3.5Z" />
+                        <path opacity="0.5" d="M12 3.5L9.5 7.5L12 12L14.5 7.5L12 3.5Z" />
+                      </svg>
                         </a>
                       )}
                     </div>

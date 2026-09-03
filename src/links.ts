@@ -7,6 +7,7 @@ export const CONTACT_LINKS = {
 };
 
 export const INTERNAL_LINKS = {
+  home: "",
   metodo: "#metodo",
   portfolio: "#portfolio",
   estrategia: "#estrategia",
@@ -14,6 +15,7 @@ export const INTERNAL_LINKS = {
   aplicacao: "#aplicacao",
   propostaProfissional: "#proposta-profissional",
   privacidade: "/privacidade",
+  termos: "/termos",
   blog: "blog",
-  autores: "autores", 
+  autores: "autores",
 };
