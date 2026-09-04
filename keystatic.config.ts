@@ -204,6 +204,9 @@ export default config({
         linkedin: fields.text({
           label: "Link do LinkedIn",
         }),
+        cnpq: fields.text({
+          label: "Link do Lattes (CNPQ)",
+        }),
         tiktok: fields.text({
           label: "Link do Tiktok",
         }),

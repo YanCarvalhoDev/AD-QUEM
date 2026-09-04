@@ -1,67 +1,90 @@
 ---
 // src/pages/blog.astro
-export const prerender = true;
-
 import '../styles/global.css';
 import MainLayout from '../layouts/MainLayout.astro';
-import BlogComponent from '../components/Blog'; 
-import { getCollection } from 'astro:content';
+import BlogComponent from '../components/Blog';
 
-// 🌟 REMOVIDO: import.meta.glob (Não é necessário porque o Astro 6 já resolve as imagens nativamente)
+// 1. Inicializa o Reader oficial do Keystatic
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
 
-const artigosRaw = await getCollection('artigos');
+const reader = createReader(
+  import.meta.env.DEV ? './' : process.cwd(), 
+  keystaticConfig
+);
 
-const postsOrdenados = artigosRaw.sort((a, b) => {
+const imagens = import.meta.glob(
+  "/src/assets/images/artigos/**/*.{png,jpg,jpeg,webp,avif}",
+  {
+    eager: true,
+    import: "default",
+  }
+);
+
+// 2. Busca os slugs da coleção 'artigos' cadastrados no disco
+const slugs = await reader.collections.artigos.list();
+
+// 3. Lê os dados internos de cada artigo concorrentemente
+const artigosRaw = await Promise.all(
+  slugs.map(async (slug) => {
+    const data = await reader.collections.artigos.read(slug);
+    return { slug, data };
+  })
+);
+
+// Filtra por segurança caso haja algum arquivo corrompido ou nulo
+const artigosValidos = artigosRaw.filter(artigo => artigo.data !== null);
+
+// 4. Ordena os artigos por data (mais recente primeiro)
+const postsOrdenados = artigosValidos.sort((a, b) => {
   const dataA = a.data?.date ? new Date(a.data.date).getTime() : 0;
   const dataB = b.data?.date ? new Date(b.data.date).getTime() : 0;
   return dataB - dataA;
 });
 
+// 5. Mapeia e higieniza as propriedades para o componente React de Alta Performance
 const postsProntos = await Promise.all(
   postsOrdenados.map(async (item) => {
-    const post = item.data;
+    const post = item.data!;
     
     let nomesAutores = "Equipe";
     if (post.authors?.length) {
-      const todosAutores = await getCollection('autores');
-      nomesAutores = todosAutores
-        .filter(autor => post.authors.includes(autor.id))
-        .map(autor => autor.data.name)
-        .join(" | ") || "Equipe";
+      const autores = await Promise.all(
+        post.authors.map((slug) => reader.collections.autores.read(slug))
+      );
+
+      nomesAutores = autores
+        .filter(Boolean)
+        .map((autor) => autor!.name)
+        .join(" | ");
     }
 
-    // 🌟 CORREÇÃO DEFINITIVA: Extrai o objeto de imagem processado nativamente pelo Astro 6
-    const imagemPronta =
-  typeof post.heroImage === "object"
-    ? post.heroImage?.src
-    : post.heroImage ?? null;
+    let imagem = null;
+    if (post.heroImage) {
+      const caminho =
+        (typeof post.heroImage === "string"
+          ? post.heroImage
+          : post.heroImage.src
+        ).replace("../../assets", "/src/assets");
 
+      imagem = imagens[caminho] ?? null;
+    }
 
     return {
-      id: item.id,
-      slug: item.id,
+      id: item.slug,
+      slug: item.slug,
       title: post.title || "Artigo sem título",
       excerpt: post.subtitle || "",
       category: post.category || "Insight",
       author: nomesAutores,
       date: post.date || new Date().toISOString(),
       readTime: post.readingTime || "5 min",
-      image: imagemPronta // Envia o objeto limpo ou a string direto para o React
+      image: imagem
     };
   })
 );
 
 const todasCategorias = postsProntos.map(p => p.category).filter(Boolean);
-console.log(
-  "POSTS BLOG:",
-  postsProntos.map((p) => ({
-    slug: p.slug,
-    image: p.image,
-    type: typeof p.image,
-  }))
-);
-
-
 const categoriasDinamicas = ["Todos", ...new Set(todasCategorias)];
 
 // 🌟 CONFIGURAÇÃO DE SEO E META TAGS DO BLOG 🌟
@@ -101,7 +124,6 @@ const blogSchema = {
   }))
 };
 ---
-
 
 <!doctype html>
 <html lang="pt-BR">
@@ -147,10 +169,9 @@ const blogSchema = {
 
     <script type="application/ld+json" set:html={JSON.stringify(blogSchema)} />
   </head>
-<body>
+  <body>
     <MainLayout title={metaTitle} description={metaDescription}>
       <BlogComponent client:load postsDoKeystatic={postsProntos} categoriasDoKeystatic={categoriasDinamicas} />
     </MainLayout>
   </body>
 </html>
-  

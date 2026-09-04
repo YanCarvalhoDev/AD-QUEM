@@ -12,7 +12,6 @@ import { Link } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
 
-
 // Definição das interfaces para tipagem do Keystatic
 interface Person {
   name: string;
@@ -73,13 +72,13 @@ export default function Article({
     }
   };
 
-  const handleEmail = () => {
-    const subject = encodeURIComponent(`Artigo interessante: ${title}`);
-    const body = encodeURIComponent(
-      `Olá,\n\nRecomendo a leitura deste artigo:\n\n${window.location.href}\n\nAbraços.`,
-    );
-    window.location.href = `mailto:?subject=${subject}&body=${body}`;
-  };
+  // const handleEmail = () => {
+  //   const subject = encodeURIComponent(`Artigo interessante: ${title}`);
+  //   const body = encodeURIComponent(
+  //     `Olá,\n\nRecomendo a leitura deste artigo:\n\n${window.location.href}\n\nAbraços.`,
+  //   );
+  //   window.location.href = `mailto:?subject=${subject}&body=${body}`;
+  // };
 
   const handlePrint = () => {
     window.print();
@@ -91,7 +90,7 @@ export default function Article({
         <Header isDarkPage={true} />
       </div>
 
-      <main className="pb-40">
+      <main className="pb-40 ">
         {/* Hero Section */}
         <div className="bg-teal-deep pt-48 pb-16 mb-20 relative overflow-hidden no-print">
           <div className="absolute top-0 right-0 w-1/3 h-full bg-gold-pale/5 blur-[120px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
@@ -119,13 +118,13 @@ export default function Article({
                 >
                   <Share2 size={18} />
                 </button>
-                <button
+                {/* <button
                   className="text-white/60 hover:text-white transition-colors"
                   title="Enviar por E-mail"
                   onClick={handleEmail}
                 >
                   <Mail size={18} />
-                </button>
+                </button> */}
                 <button
                   className="text-white/60 hover:text-white transition-colors"
                   title="Imprimir Artigo"

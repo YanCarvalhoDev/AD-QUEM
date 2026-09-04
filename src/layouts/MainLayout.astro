@@ -12,7 +12,7 @@ interface Props {
 }
 
 const { 
-  title = "AD QUEM | Sites para Advogados de Alto Padrão", 
+  title = "AD QUEM | Autoridade para o Mercado Jurídico", 
   isDarkPage = true, 
   className = "bg-teal-deep" 
 } = Astro.props;
@@ -40,7 +40,7 @@ const {
     />
     
     <title>{title}</title>
-    <meta name="description" content="Engenharia de software de elite para bancas jurídicas boutique e o 1% do mercado brasileiro. Soluções digitais customizadas para alta performance." />
+    <meta name="description" content="A Ad Quem desenvolve estratégias, experiências e estruturas digitais para bancas de advocacia que desejam fortalecer sua presença, reputação e autoridade." />
     <meta name="keywords" content="engenharia de software jurídico, arquiteto digital, tecnologia para advogados, automação jurídica, software sob medida, bancas boutique" />
     <link rel="canonical" href={Astro.url.href} />
     <meta name="robots" content="index, follow" />
@@ -49,108 +49,107 @@ const {
     <meta property="og:type" content="website" />
     <meta property="og:url" content={Astro.url.href} />
     <meta property="og:title" content={title} />
-    <meta property="og:description" content="Engenharia de software de elite para bancas jurídicas boutique e o 1% do mercado brasileiro." />
+    <meta property="og:description" content="Estratégia, tecnologia e conteúdo para fortalecer a presença e a autoridade de bancas de advocacia." />
     <meta property="og:image" content="/AQ_logo_g.png" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={Astro.url.href} />
     <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content="Engenharia de software de elite para bancas jurídicas boutique e o 1% do mercado brasileiro." />
+    <meta property="twitter:description" content="A Ad Quem desenvolve estratégias, experiências e estruturas digitais para bancas de advocacia que desejam fortalecer sua presença, reputação e autoridade." />
     <meta property="twitter:image" content="/AQ_logo_g.png" />
 
-    <!-- Schema.org for Google -->
     <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "AdQuem",
+  "description": "A Ad Quem desenvolve estratégias, experiências e estruturas digitais para bancas de advocacia que desejam fortalecer sua presença, reputação e autoridade.",
+  "image": "/AQ_logo_g.png",
+  "url": "https://www.adquem.com.br",
+  "priceRange": "R$ 2.000,00+",
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "-23.5505",
+    "longitude": "-46.6333"
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "São Paulo",
+    "addressRegion": "SP",
+    "addressCountry": "BR"
+  },
+  "areaServed": [
+    {
+      "@type": "Country",
+      "name": "Brasil"
+    },
+    {
+      "@type": "City",
+      "name": "São Paulo",
+      "description": "Centro estratégico de atendimento para bancas de alto padrão."
+    }
+  ],
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ],
+    "opens": "08:00",
+    "closes": "20:00"
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Serviços da Ad Quem",
+    "itemListElement": [
       {
-        "@context": "https://schema.org",
-        "@type": "ProfessionalService",
-        "name": "AdQuem",
-        "description": "Projetamos sites de alto padrão para advogados que buscam autoridade inquestionável, performance de elite e conformidade total com a OAB.",
-        "image": "/AQ_logo_g.png",
-        "url": "https://www.adquem.com.br",
-        "priceRange": "R$ 2.000,00+",
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": "-23.5505",
-          "longitude": "-46.6333"
-        },
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "São Paulo",
-          "addressRegion": "SP",
-          "addressCountry": "BR"
-        },
-        "areaServed": [
-          {
-            "@type": "Country",
-            "name": "Brasil"
-          },
-          {
-            "@type": "City",
-            "name": "São Paulo",
-            "description": "Centro estratégico de atendimento para bancas de alto padrão."
-          }
-        ],
-        "openingHoursSpecification": {
-          "@type": "OpeningHoursSpecification",
-          "dayOfWeek": [
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-            "Sunday"
-          ],
-          "opens": "08:00",
-          "closes": "20:00"
-        },
-        "hasOfferCatalog": {
-          "@type": "OfferCatalog",
-          "name": "Engenharia de Ativos Jurídicos",
-          "itemListElement": [
-            {
-              "@type": "Offer",
-              "itemOffered": {
-                "@type": "Service",
-                "name": "Arquitetura de Prestígio e Blindagem Digital",
-                "description": "Desenvolvimento nativo com conformidade rigorosa ao Provimento 205/2021 da OAB e LGPD."
-              }
-            },
-            {
-              "@type": "Offer",
-              "itemOffered": {
-                "@type": "Service",
-                "name": "Performance de Alta Disponibilidade",
-                "description": "Infraestrutura de elite com carregamento instantâneo para garantir a retenção de clientes de alto ticket."
-              }
-            },
-            {
-              "@type": "Offer",
-              "itemOffered": {
-                "@type": "Service",
-                "name": "Inteligência de Posicionamento e SEO",
-                "description": "Dominância em buscas orgânicas para termos jurídicos de alta conversão e relevância estratégica."
-              }
-            },
-            {
-              "@type": "Offer",
-              "itemOffered": {
-                "@type": "Service",
-                "name": "Design Institucional de Autoridade",
-                "description": "Interfaces projetadas para transmitir solidez, tradição e o rigor técnico das bancas líderes de mercado."
-              }
-            }
-          ]
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Diagnóstico e Arquitetura Digital",
+          "description": "Análise do posicionamento, serviços, objetivos e estrutura digital da banca para definir uma presença alinhada à sua autoridade e às suas necessidades."
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Identidade e Experiência Digital",
+          "description": "Desenvolvimento de uma experiência visual alinhada à identidade, reputação e posicionamento da banca, com foco em clareza, confiança e diferenciação."
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Desenvolvimento e Infraestrutura",
+          "description": "Desenvolvimento de sites e estruturas digitais com foco em performance, segurança, acessibilidade, mecanismos de busca e novas formas de descoberta digital."
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Conteúdo e Evolução Digital",
+          "description": "Estruturação da presença digital para publicação de conhecimento, artigos, conteúdos especializados e evolução contínua da banca."
         }
       }
-    </script>
+    ]
+  }
+}
+</script>
 
   </head>
   <body class={`min-h-screen selection:bg-gold-pale selection:text-teal-deep ${className}`}>
-    <ProgressIndicator client:idle />
+  <!--  <ProgressIndicator client:idle /> -->
     
-    <Header isDarkPage={isDarkPage} client:idle />
+  <Header isDarkPage={isDarkPage} client:idle /> 
     
     <main>
       <slot />
