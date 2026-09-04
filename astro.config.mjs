@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import markdoc from "@astrojs/markdoc";
 import keystatic from "@keystatic/astro";
 import cloudflare from "@astrojs/cloudflare";
-import sitemap from "@astrojs/sitemap";
+// import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
   output: "static",
@@ -12,7 +12,7 @@ export default defineConfig({
   adapter: cloudflare({
     imageService: 'compile'
   }),
-  integrations: [react(), markdoc(), keystatic(), sitemap()],
+  integrations: [react(), markdoc(), keystatic()],
   vite: {
     plugins: [tailwindcss()],
   },
@@ -22,5 +22,4 @@ export default defineConfig({
   devToolbar: {
     enabled: false,
   },
-  prerenderEnvironment: 'node',
 });
