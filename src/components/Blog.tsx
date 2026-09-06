@@ -195,9 +195,9 @@ export default function Blog({
                         </span>
                       </div>
 
-                      <h3 className="text-2xl font-bold text-[#002B30] leading-tight group-hover:text-[#C5A880] transition-colors duration-300">
+                      <h2 className="text-2xl font-bold text-[#002B30] leading-tight group-hover:text-[#C5A880] transition-colors duration-300">
                         {post.title}
-                      </h3>
+                      </h2>
 
                       <p className="text-[15px] text-gray-500 line-clamp-3 leading-relaxed font-light">
                         {post.excerpt}
