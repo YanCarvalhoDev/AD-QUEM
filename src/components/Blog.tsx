@@ -267,7 +267,7 @@ export default function Blog({
       </section>
 
       {/* Newsletter - Corrigida contra avisos do Chrome */}
-      <section className="bg-[#001F22] py-24 px-6 text-center border-t border-white/5 relative overflow-hidden">
+      {/* <section className="bg-[#001F22] py-24 px-6 text-center border-t border-white/5 relative overflow-hidden">
         <div className="absolute inset-0 bg-[#C5A880]/2 blur-[100px] rounded-full pointer-events-none translate-y-1/2"></div>
         <div className="container mx-auto max-w-2xl relative z-10">
           <span className="text-[#C5A880] text-[11px] font-bold uppercase tracking-[0.3em] mb-6 block">
@@ -298,7 +298,7 @@ export default function Blog({
             </button>
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 }
