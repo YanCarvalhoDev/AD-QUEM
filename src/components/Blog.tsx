@@ -75,30 +75,22 @@ export default function Blog({
   //     return dataString;
   //   }
   // };
+const formatarDataBR = (dataString: string) => {
+  try {
+    const data = new Date(dataString);
+    
+    // Soma 1 dia à data atual
+    data.setDate(data.getDate() + 1);
 
-  const formatarDataBR = (dataString: string) => {
-    if (!dataString) return "";
-    try {
-      const str = String(dataString);
-      const partesData = str.includes("T") ? str.split("T")[0] : str;
-      const [ano, mes, dia] = partesData ? partesData.split("-") : [];
-
-      if (ano && mes && dia) {
-        const dataUTC = new Date(Date.UTC(Number(ano), Number(mes) - 1, Number(dia), 12, 0, 0));
-
-        return dataUTC.toLocaleDateString("pt-BR", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-          timeZone: "UTC", 
-        });
-      }
-
-      return str;
-    } catch {
-      return String(dataString || "");
-    }
-  };
+    return data.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  } catch {
+    return dataString;
+  }
+};
 
   return (
     <div className="min-h-screen bg-white font-sans selection:bg-[#E6F4F6] text-black">
