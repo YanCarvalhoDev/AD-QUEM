@@ -79,26 +79,22 @@ export default function Blog({
   const formatarDataBR = (dataString: string) => {
     if (!dataString) return "";
     try {
-      // Se já vier como ISO ou string com hífen (AAAA-MM-DD)
-      const stringPura = String(dataString).split("T")[0];
-      const partes = stringPura.split("-");
+      const str = String(dataString);
+      const partesData = str.includes("T") ? str.split("T")[0] : str;
+      const [ano, mes, dia] = partesData ? partesData.split("-") : [];
 
-      if (partes.length === 3) {
-        const [ano, mes, dia] = partes;
-        const dataLocal = new Date(Number(ano), Number(mes) - 1, Number(dia));
-        return dataLocal.toLocaleDateString("pt-BR", {
+      if (ano && mes && dia) {
+        const dataUTC = new Date(Date.UTC(Number(ano), Number(mes) - 1, Number(dia), 12, 0, 0));
+
+        return dataUTC.toLocaleDateString("pt-BR", {
           day: "2-digit",
           month: "short",
           year: "numeric",
+          timeZone: "UTC", 
         });
       }
 
-      // Fallback para outros formatos de data
-      return new Date(dataString).toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      });
+      return str;
     } catch {
       return String(dataString || "");
     }
