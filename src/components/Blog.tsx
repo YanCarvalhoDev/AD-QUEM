@@ -64,13 +64,32 @@ export default function Blog({
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // const formatarDataBR = (dataString: string) => {
+  //   try {
+  //     return new Date(dataString).toLocaleDateString("pt-BR", {
+  //       day: "2-digit",
+  //       month: "short",
+  //       year: "numeric",
+  //     });
+  //   } catch {
+  //     return dataString;
+  //   }
+  // };
+
   const formatarDataBR = (dataString: string) => {
+    if (!dataString) return "";
     try {
-      return new Date(dataString).toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      });
+      // Separa AAAA-MM-DD para forçar a criação no fuso horário local
+      const [ano, mes, dia] = dataString.split("T")[0].split("-");
+      if (ano && mes && dia) {
+        const dataLocal = new Date(Number(ano), Number(mes) - 1, Number(dia));
+        return dataLocal.toLocaleDateString("pt-BR", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      }
+      return dataString;
     } catch {
       return dataString;
     }
