@@ -2,96 +2,62 @@
 // src/pages/blog.astro
 import '../styles/global.css';
 import MainLayout from '../layouts/MainLayout.astro';
-import BlogComponent from '../components/Blog';
+import BlogComponent from '../components/Blog'; 
+import { getCollection } from 'astro:content';
 
-// 1. Inicializa o Reader oficial do Keystatic
-import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../keystatic.config';
+// 1. O Astro lê as coleções diretamente do sistema de arquivos durante o build (SSG)
+const [artigosRaw, todosAutores] = await Promise.all([
+  getCollection('artigos'),
+  getCollection('autores')
+]);
 
-const reader = createReader(
-  import.meta.env.DEV ? './' : process.cwd(), 
-  keystaticConfig
-);
-
-const imagens = import.meta.glob(
-  "/src/assets/images/artigos/**/*.{png,jpg,jpeg,webp,avif}",
-  {
-    eager: true,
-    import: "default",
-  }
-);
-
-// 2. Busca os slugs da coleção 'artigos' cadastrados no disco
-const slugs = await reader.collections.artigos.list();
-
-// 3. Lê os dados internos de cada artigo concorrentemente
-const artigosRaw = await Promise.all(
-  slugs.map(async (slug) => {
-    const data = await reader.collections.artigos.read(slug);
-    return { slug, data };
-  })
-);
-
-// Filtra por segurança caso haja algum arquivo corrompido ou nulo
-const artigosValidos = artigosRaw.filter(artigo => artigo.data !== null);
-
-// 4. Ordena os artigos por data (mais recente primeiro)
-const postsOrdenados = artigosValidos.sort((a, b) => {
+// 2. Ordena os artigos por data
+const postsOrdenados = artigosRaw.sort((a, b) => {
   const dataA = a.data?.date ? new Date(a.data.date).getTime() : 0;
   const dataB = b.data?.date ? new Date(b.data.date).getTime() : 0;
   return dataB - dataA;
 });
 
-// 5. Mapeia e higieniza as propriedades para o componente React de Alta Performance
-const postsProntos = await Promise.all(
-  postsOrdenados.map(async (item) => {
-    const post = item.data!;
-    
-    let nomesAutores = "Equipe";
-    if (post.authors?.length) {
-      const autores = await Promise.all(
-        post.authors.map((slug) => reader.collections.autores.read(slug))
-      );
+// 3. Mapeia os dados sem loops redundantes
+const postsProntos = postsOrdenados.map((item) => {
+  const post = item.data;
+  
+  // Resolve os nomes dos autores usando o array 'todosAutores' já pré-carregado
+  let nomesAutores = "Equipe";
+  if (post.authors?.length) {
+    nomesAutores = todosAutores
+      .filter(autor => post.authors.includes(autor.id))
+      .map(autor => autor.data.name)
+      .join(" | ") || "Equipe";
+  }
 
-      nomesAutores = autores
-        .filter(Boolean)
-        .map((autor) => autor!.name)
-        .join(" | ");
-    }
+  // Na Content Layer, o Astro já resolve o caminho/objeto da imagem estaticamente
+  const imagemPronta =
+    typeof post.heroImage === "object"
+      ? post.heroImage?.src
+      : post.heroImage ?? null;
 
-    let imagem = null;
-    if (post.heroImage) {
-      const caminho =
-        (typeof post.heroImage === "string"
-          ? post.heroImage
-          : post.heroImage.src
-        ).replace("../../assets", "/src/assets");
-
-      imagem = imagens[caminho] ?? null;
-    }
-
-    return {
-      id: item.slug,
-      slug: item.slug,
-      title: post.title || "Artigo sem título",
-      excerpt: post.subtitle || "",
-      category: post.category || "Insight",
-      author: nomesAutores,
-      date: post.date || new Date().toISOString(),
-      readTime: post.readingTime || "5 min",
-      image: imagem
-    };
-  })
-);
+  return {
+    id: item.id,
+    slug: item.id,
+    title: post.title || "Artigo sem título",
+    excerpt: post.subtitle || "",
+    category: post.category || "Insight",
+    author: nomesAutores,
+    date: post.date || new Date().toISOString(),
+    readTime: post.readingTime || "5 min",
+    image: imagemPronta
+  };
+});
 
 const todasCategorias = postsProntos.map(p => p.category).filter(Boolean);
 const categoriasDinamicas = ["Todos", ...new Set(todasCategorias)];
 
-// 🌟 CONFIGURAÇÃO DE SEO E META TAGS DO BLOG 🌟
+// Configuração de SEO & Schema
 const metaTitle = "Insights & Estratégia Jurídica | AdQuem";
 const metaDescription = "Exploramos a interseção entre engenharia de software de elite, performance computacional e arquitetura de marca premium através de artigos técnicos da nossa equipe.";
 const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://adquem.com.br");
-const ogImage = "https://adquem.com.br/AQ_og_blog.png"; // Altere para a imagem padrão do seu blog
+const ogImage = "https://adquem.com.br/AQ_og_blog.png";
 
 const blogSchema = {
   "@context": "https://schema.org",
@@ -117,10 +83,8 @@ const blogSchema = {
     "url": `${canonicalURL.origin}/artigos/${post.slug}`,
     "datePublished": post.date,
     "author": post.author.includes(" | ") 
-  ? post.author.split(" | ").map(nome => ({ "@type": "Person", "name": nome }))
-  : { "@type": "Person", "name": post.author }
-
-
+      ? post.author.split(" | ").map(nome => ({ "@type": "Person", "name": nome }))
+      : { "@type": "Person", "name": post.author }
   }))
 };
 ---
