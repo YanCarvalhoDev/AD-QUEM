@@ -79,9 +79,12 @@ export default function Blog({
   const formatarDataBR = (dataString: string) => {
     if (!dataString) return "";
     try {
-      // Separa AAAA-MM-DD para forçar a criação no fuso horário local
-      const [ano, mes, dia] = dataString.split("T")[0].split("-");
-      if (ano && mes && dia) {
+      // Se já vier como ISO ou string com hífen (AAAA-MM-DD)
+      const stringPura = String(dataString).split("T")[0];
+      const partes = stringPura.split("-");
+
+      if (partes.length === 3) {
+        const [ano, mes, dia] = partes;
         const dataLocal = new Date(Number(ano), Number(mes) - 1, Number(dia));
         return dataLocal.toLocaleDateString("pt-BR", {
           day: "2-digit",
@@ -89,9 +92,15 @@ export default function Blog({
           year: "numeric",
         });
       }
-      return dataString;
+
+      // Fallback para outros formatos de data
+      return new Date(dataString).toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
     } catch {
-      return dataString;
+      return String(dataString || "");
     }
   };
 
