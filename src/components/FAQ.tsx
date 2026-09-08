@@ -88,9 +88,9 @@ export default function FAQ() {
           className="mt-20 p-8 bg-white rounded-2xl flex flex-col md:flex-row items-center justify-between gap-8"
         >
           <div className="text-sandstone">
-            <h4 className="text-xl font-bold mb-2 text-teal-deep tracking-wider">
+            <h3 className="text-xl font-bold mb-2 text-teal-deep tracking-wider">
               Sua banca está sendo percebida como deveria?
-            </h4>
+            </h3>
             <p className="text-teal-deep/60 text-sm">
               Entenda como sua presença digital pode contribuir para a
               autoridade da sua banca.
