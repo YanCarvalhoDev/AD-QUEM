@@ -264,9 +264,9 @@ export default function ROISection() {
           className="mt-20 p-8 bg-teal-deep rounded-2xl flex flex-col md:flex-row items-center justify-between gap-8"
         >
           <div className="text-sandstone">
-            <h4 className="text-xl font-bold mb-2 text-white tracking-wide">
+            <h3 className="text-xl font-bold mb-2 text-white tracking-wide">
               Sua banca está sendo percebida como deveria?
-            </h4>
+            </h3>
             <p className="text-sandstone/60 text-sm">
               Entenda como sua presença digital pode contribuir para a
               autoridade da sua banca.
