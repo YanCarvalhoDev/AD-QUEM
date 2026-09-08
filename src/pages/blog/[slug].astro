@@ -60,9 +60,6 @@ const dataFormatada = date
     }).format(new Date(date))
   : '';
 
-// ======================================================
-// ✅ RESOLUÇÃO LIMPA E INDEPENDENTE PARA PRODUÇÃO
-// ======================================================
 let ogImage = new URL('/og-image.jpg', Astro.site || 'https://www.adquem.com.br').toString();
 
 if (artigo.data.heroImage) {
@@ -108,14 +105,12 @@ const schema = {
     .map((autor) => {
       const data = autor.data;
       
-      // sameAs recebe apenas links de perfis/redes sociais
       const redesSociais = [
         data.linkedin,
         data.instagram,
         data.jusbrasil
       ].filter(Boolean);
 
-      // Limpa os caracteres e garante o formato padrão internacional: +5511999999999
       const apenasNumeros = data.whatsapp ? data.whatsapp.replace(/\D/g, '') : '';
       const telefoneFormatado = apenasNumeros ? `+55${apenasNumeros}` : '';
 
@@ -129,7 +124,6 @@ const schema = {
 
         ...(data.knowsAbout && data.knowsAbout.length > 0 && { "knowsAbout": data.knowsAbout }),
         
-        // WhatsApp entra como um canal de telefone puro e padronizado
         ...(telefoneFormatado && { "telephone": telefoneFormatado }),
         
         ...(redesSociais.length > 0 && { "sameAs": redesSociais }),
@@ -273,9 +267,9 @@ const schema = {
                   <div class="grid grid-cols-2 lg:grid-cols-1 gap-6 border-t border-gray-100 pt-6">
 
                     <div>
-                      <h4 class="text-[12px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-2">
+                      <p class="text-[12px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-2">
                         Tempo de Leitura
-                      </h4>
+                      </p>
                       <div class="flex items-center gap-2 text-[#002B30] font-bold text-xs uppercase tracking-wider">
                         <Clock size={14} class="text-[#005F6B]" />
                         <span>{readingTime || "5 mins"}</span>
@@ -283,9 +277,9 @@ const schema = {
                     </div>
 
                     <div>
-                      <h4 class="text-[12px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-2">
+                      <p class="text-[12px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-2">
                         Publicado em
-                      </h4>
+                      </p>
                       <div class="flex items-center gap-2 text-[#002B30] font-bold text-xs uppercase tracking-wider">
                         <Calendar size={14} class="text-[#005F6B]" />
                         <span>{dataFormatada}</span>
@@ -296,9 +290,9 @@ const schema = {
 
                   {dadosAutores.length > 0 && (
                   <div class="border-t border-gray-100 pt-8">
-                    <h4 class="text-[12px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-6">
+                    <p class="text-[12px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-6">
                       Autores
-                    </h4>
+                    </p>
                     <div class="space-y-6">
                       {dadosAutores.map((autor) => {
                         if (!autor || !autor.data) return null;
