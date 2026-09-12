@@ -49,4 +49,4 @@ Disallow: /private/
 Disallow: /tmp/
 Disallow: /*?* 
 
-Sitemap: https://www.adquem.com.br/sitemap-index.xml
+Sitemap: https://www.adquem.com.br/sitemap.xml
