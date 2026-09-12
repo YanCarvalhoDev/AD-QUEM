@@ -1,30 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://sitemaps.org">
-  <!-- Home -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
   <url>
     <loc>https://www.adquem.com.br/</loc>
-    <lastmod>2024-05-22</lastmod>
-    <priority>1.0</priority>
+    <lastmod>2026-09-12</lastmod>
   </url>
 
-  <!-- Performance -->
   <url>
-    <loc>https://www.adquem.com.br/performance/</loc>
-    <lastmod>2024-05-22</lastmod>
-    <priority>0.8</priority>
+    <loc>https://www.adquem.com.br/blog/</loc>
+    <lastmod>2026-09-12</lastmod>
   </url>
 
-  <!-- Privacidade -->
   <url>
-    <loc>https://www.adquem.com.br/privacidade/</loc>
-    <lastmod>2024-05-22</lastmod>
-    <priority>0.5</priority>
+    <loc>https://www.adquem.com.br/autores/</loc>
+    <lastmod>2026-09-12</lastmod>
   </url>
 
-  <!-- Termos -->
   <url>
-    <loc>https://www.adquem.com.br/termos/</loc>
-    <lastmod>2024-05-22</lastmod>
-    <priority>0.5</priority>
+    <loc>https://www.adquem.com.br/blog/eleicoes-2026-o-que-muda/</loc>
+    <lastmod>2026-09-12</lastmod>
   </url>
+
+  <url>
+    <loc>https://www.adquem.com.br/autores/yan-carvalho/</loc>
+    <lastmod>2026-09-12</lastmod>
+  </url>
+
+  <url>
+    <loc>https://www.adquem.com.br/autores/ancelmo-machado/</loc>
+    <lastmod>2026-09-12</lastmod>
+  </url>
+
 </urlset>
