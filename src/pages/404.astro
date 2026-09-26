@@ -1,0 +1,303 @@
+---
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import '../styles/global.css';
+---
+
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Página Não Encontrada | AD QUEM</title>
+
+    <meta name="robots" content="noindex, follow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#F5F1E8" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+
+  <body>
+    <Header client:load />
+
+    <main class="error-page">
+      <div class="error-content">
+
+        <span class="error-code" aria-hidden="true">404</span>
+
+        <div class="error-heading">
+          <span class="error-kicker">AD QUEM</span>
+
+          <h1>Página não encontrada</h1>
+        </div>
+
+        <div class="error-divider" aria-hidden="true"></div>
+
+        <p class="error-description">
+          A página que você procura não está disponível ou pode ter sido movida.
+          Retorne ao início e continue explorando a presença digital da Ad Quem.
+        </p>
+
+        <a href="/" class="error-button">
+          <span>Voltar à página inicial</span>
+          <span class="error-arrow" aria-hidden="true">→</span>
+        </a>
+
+      </div>
+    </main>
+
+    <Footer client:load />
+  </body>
+</html>
+
+<style>
+  .error-page {
+    min-height: clamp(600px, 72vh, 800px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding:
+      clamp(5rem, 8vw, 8rem)
+      clamp(1.25rem, 5vw, 5rem);
+
+    background: #002b36;
+
+    position: relative;
+    overflow: hidden;
+  }
+
+  /*
+   * Elemento arquitetônico extremamente discreto.
+   * Não usa verde no preenchimento nem interfere
+   * na leitura da página.
+   */
+  .error-page::before {
+    content: "";
+
+    position: absolute;
+
+    width: min(55vw, 720px);
+    height: min(55vw, 720px);
+
+    border: 1px solid rgba(0, 43, 54, 0.035);
+    border-radius: 50%;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    pointer-events: none;
+  }
+
+  .error-content {
+    position: relative;
+    z-index: 1;
+
+    width: min(100%, 720px);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: center;
+  }
+
+  .error-code {
+    display: block;
+
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+
+    color: #b29468
+
+    font-family: var(--font-classic);
+    font-size: clamp(5rem, 13vw, 9rem);
+    font-weight: 400;
+
+    line-height: 0.8;
+    letter-spacing: -0.06em;
+
+    /*
+     * O 404 aparece apenas como elemento visual.
+     */
+    opacity: 0.07;
+
+    user-select: none;
+  }
+
+  .error-heading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .error-kicker {
+    margin-bottom: clamp(0.7rem, 1.5vw, 1rem);
+
+    color: #b29468;
+
+    font-family: var(--font-sans);
+    font-size: clamp(0.62rem, 0.8vw, 0.72rem);
+    font-weight: 700;
+
+    letter-spacing: 0.3em;
+    line-height: 1;
+  }
+
+  h1 {
+    margin: 0;
+
+    color: #b29468;
+
+    font-family: var(--font-serif-luxury);
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    font-weight: 700;
+
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .error-divider {
+    width: clamp(50px, 6vw, 72px);
+    height: 1px;
+
+    margin:
+      clamp(1.5rem, 3vw, 2.25rem)
+      0;
+
+    background: #002b36;
+  }
+
+  .error-description {
+    width: min(100%, 560px);
+
+    margin: 0 0 clamp(2rem, 4vw, 2.75rem);
+
+    color: #b29468;
+
+    font-family: var(--font-sans);
+    font-size: clamp(0.94rem, 1.2vw, 1.06rem);
+    font-weight: 400;
+
+    line-height: 1.75;
+  }
+
+  .error-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+
+    min-height: 52px;
+
+    padding:
+      0.85rem 1.5rem
+      0.85rem 1.75rem;
+
+    background: #002b36;
+    border: 1px solid #c5a880;
+
+    color: #f5f1e8;
+
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 700;
+
+    letter-spacing: 0.14em;
+    line-height: 1;
+
+    text-decoration: none;
+    text-transform: uppercase;
+
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease,
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .error-arrow {
+    font-size: 1.1rem;
+    font-weight: 400;
+    line-height: 1;
+
+    transition: transform 0.3s ease;
+  }
+
+  .error-button:hover {
+    background: #c5a880;
+    color: #002b36;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+      0 8px 24px rgba(0, 43, 54, 0.08);
+  }
+
+  .error-button:hover .error-arrow {
+    transform: translateX(4px);
+  }
+
+  .error-button:focus-visible {
+    outline: 2px solid #c5a880;
+    outline-offset: 4px;
+  }
+
+  @media (max-width: 600px) {
+    .error-page {
+      min-height: 580px;
+
+      padding:
+        5rem
+        1.25rem;
+    }
+
+    .error-page::before {
+      width: 480px;
+      height: 480px;
+    }
+
+    .error-code {
+      font-size: clamp(4.75rem, 25vw, 7rem);
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 8vw, 2.4rem);
+    }
+
+    .error-description {
+      max-width: 430px;
+
+      font-size: 0.94rem;
+      line-height: 1.7;
+    }
+
+    .error-button {
+      width: min(100%, 290px);
+    }
+  }
+
+  @media (max-width: 380px) {
+    .error-page {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .error-kicker {
+      letter-spacing: 0.22em;
+    }
+
+    .error-description {
+      font-size: 0.9rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .error-button,
+    .error-arrow {
+      transition: none;
+    }
+  }
+</style>
