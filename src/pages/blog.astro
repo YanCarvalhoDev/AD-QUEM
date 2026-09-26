@@ -1,28 +1,35 @@
 ---
-// src/pages/blog.astro
 import '../styles/global.css';
-import MainLayout from '../layouts/MainLayout.astro';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 import BlogComponent from '../components/Blog'; 
 import { getCollection } from 'astro:content';
 
-// 1. O Astro lê as coleções diretamente do sistema de arquivos durante o build (SSG)
+interface Props {
+  isDarkPage?: boolean;
+  className?: string;
+}
+
+const {  
+  isDarkPage = true, 
+  className = "bg-teal-deep" 
+} = Astro.props;
+
+
 const [artigosRaw, todosAutores] = await Promise.all([
   getCollection('artigos'),
   getCollection('autores')
 ]);
 
-// 2. Ordena os artigos por data
 const postsOrdenados = artigosRaw.sort((a, b) => {
   const dataA = a.data?.date ? new Date(a.data.date).getTime() : 0;
   const dataB = b.data?.date ? new Date(b.data.date).getTime() : 0;
   return dataB - dataA;
 });
 
-// 3. Mapeia os dados sem loops redundantes
 const postsProntos = postsOrdenados.map((item) => {
   const post = item.data;
   
-  // Resolve os nomes dos autores usando o array 'todosAutores' já pré-carregado
   let nomesAutores = "Equipe";
   if (post.authors?.length) {
     nomesAutores = todosAutores
@@ -31,7 +38,6 @@ const postsProntos = postsOrdenados.map((item) => {
       .join(" | ") || "Equipe";
   }
 
-  // Na Content Layer, o Astro já resolve o caminho/objeto da imagem estaticamente
   const imagemPronta =
     typeof post.heroImage === "object"
       ? post.heroImage?.src
@@ -55,7 +61,7 @@ const categoriasDinamicas = ["Todos", ...new Set(todasCategorias)];
 
 // Configuração de SEO & Schema
 const metaTitle = "Insights & Estratégia Jurídica | AdQuem";
-const metaDescription = "Exploramos a interseção entre engenharia de software de elite, performance computacional e arquitetura de marca premium através de artigos técnicos da nossa equipe.";
+const metaDescription = "Conhecimento sobre presença digital, tecnologia e transformação da advocacia. Artigos, análises e insights sobre o mercado jurídico e seus desafios.";
 const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://adquem.com.br");
 const ogImage = "https://adquem.com.br/AQ_og_blog.png";
 
@@ -133,7 +139,9 @@ const blogSchema = {
 
     <script type="application/ld+json" set:html={JSON.stringify(blogSchema)} />
   </head>
-  <body>
-      <BlogComponent client:load postsDoKeystatic={postsProntos} categoriasDoKeystatic={categoriasDinamicas} />
+  <body class={`min-h-screen selection:bg-gold-pale selection:text-teal-deep ${className}`}>
+    <Header isDarkPage={isDarkPage} client:idle /> 
+    <BlogComponent client:load postsDoKeystatic={postsProntos} categoriasDoKeystatic={categoriasDinamicas} />
+    <Footer client:visible />
   </body>
 </html>
