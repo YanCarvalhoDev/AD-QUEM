@@ -134,8 +134,6 @@ const blogSchema = {
     <script type="application/ld+json" set:html={JSON.stringify(blogSchema)} />
   </head>
   <body>
-    <MainLayout title={metaTitle} description={metaDescription}>
       <BlogComponent client:load postsDoKeystatic={postsProntos} categoriasDoKeystatic={categoriasDinamicas} />
-    </MainLayout>
   </body>
 </html>
