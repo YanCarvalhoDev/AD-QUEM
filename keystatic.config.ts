@@ -81,6 +81,7 @@ export default config({
           },
           dividers: true,
           links: true,
+          tables: true,
         }),
         perguntasRapidas: fields.array(
           fields.object({
