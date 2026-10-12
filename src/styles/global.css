@@ -409,7 +409,8 @@
     overflow-x: auto;
     white-space: nowrap;
     width: 100%;
-  } */
+  } 
+}*/
 @media (max-width: 768px) {
   .prose table {
     display: table; /* Garante que ela continue se comportando como tabela */
@@ -426,6 +427,4 @@
     /* Mantém as bordas originais perfeitas e sem duplicar */
     border: 1px solid #c5a880; 
   }
-}
-
 }
