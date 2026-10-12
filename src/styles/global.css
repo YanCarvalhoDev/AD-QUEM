@@ -403,11 +403,29 @@
   background-color: #f7f4ec;
 }
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .prose table {
     display: block;
     overflow-x: auto;
     white-space: nowrap;
     width: 100%;
+  } */
+@media (max-width: 768px) {
+  .prose table {
+    display: table; /* Garante que ela continue se comportando como tabela */
+    overflow-x: auto;
+    table-layout: auto; /* Força as colunas a se ajustarem ao tamanho do conteúdo */
+    width: 100%;
+    max-width: 100%;
   }
+
+  .prose th, .prose td {
+    white-space: normal; /* Permite a quebra de linha em duas ou mais linhas */
+    word-break: break-word; /* Evita que palavras muito longas quebrem o layout */
+    
+    /* Mantém as bordas originais perfeitas e sem duplicar */
+    border: 1px solid #c5a880; 
+  }
+}
+
 }
