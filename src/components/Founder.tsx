@@ -102,8 +102,8 @@ export default function Founder({
               <p>
                 <strong className="text-sandstone/100">
                   Ad Quem 
-                </strong>
-                {""}é uma expressão latina presente no vocabulário jurídico. No contexto dos recursos, 
+                </strong> {""}
+                  é uma expressão latina presente no vocabulário jurídico. No contexto dos recursos, 
                 aparece na expressão juízo ad quem, que designa o órgão jurisdicional ao qual um recurso é dirigido. 
                 Também pode ser utilizada para indicar o termo final de um prazo ou período.
               </p>
