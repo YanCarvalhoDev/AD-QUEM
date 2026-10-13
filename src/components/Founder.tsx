@@ -103,12 +103,12 @@ export default function Founder({
                 <strong className="text-sandstone/100">
                   Ad Quem 
                 </strong>
-                é uma expressão latina presente no vocabulário jurídico. No contexto dos recursos, 
+                {""}é uma expressão latina presente no vocabulário jurídico. No contexto dos recursos, 
                 aparece na expressão juízo ad quem, que designa o órgão jurisdicional ao qual um recurso é dirigido. 
                 Também pode ser utilizada para indicar o termo final de um prazo ou período.
               </p>
               <p>
-                Foi desse universo jurídico que surgiu o nome da Ad Quem, fundada por 
+                Foi desse universo jurídico que surgiu o nome da Ad Quem, fundada por {""}
                 <strong className="text-sandstone/100">Yan Carvalho, Engenheiro da Computação</strong>, 
                 a partir da percepção de que a autoridade construída por uma banca ao longo de sua trajetória precisa ser 
                 traduzida para o ambiente digital com a mesma clareza e consistência
