@@ -293,73 +293,76 @@ const schema = {
           </div>
           
           <article class="container mx-auto max-w-7xl px-6 lg:px-20">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
 
               {/* Rail Lateral de Metadados */}
-              <aside class="lg:col-span-3 space-y-12">
-                <div class="space-y-10">
-                  <div class="grid grid-cols-2 lg:grid-cols-1 gap-6 border-t border-gray-100 pt-6">
+              
+<aside class="contents lg:block lg:col-span-3 lg:space-y-12">
+  <div class="space-y-1">
 
-                    <div>
-                      <p class="text-[12px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-2">
-                        Tempo de Leitura
+    <!-- Data de publicação -->
+    <div class="pt-0">
+      <div>
+        <h4 class="text-[12px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-2">
+          Publicado em <span>{dataFormatada}</span>
+        </h4>
+
+   
+      </div>
+    </div>
+
+    <!-- Autores -->
+    {dadosAutores.length > 0 && (
+      <div class="hidden lg:block border-t border-gray-100 pt-8">
+        <h4 class="text-[12px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-6">
+  {dadosAutores.filter((autor) => autor?.data).length === 1
+    ? "Autor"
+    : "Autores"}
+</h4>
+
+        <div class="space-y-6">
+          {dadosAutores.map((autor) => {
+            if (!autor || !autor.data) return null;
+
+            return (
+              <div class="group">
+                <div class="flex items-center gap-4">
+                  {autor.data.image && (
+                    <img
+                      src={
+                        typeof autor.data.image === "string"
+                          ? autor.data.image
+                          : autor.data.image.src
+                      }
+                      alt={autor.data.name}
+                      class="w-14 h-14 rounded-full object-cover object-top grayscale group-hover:grayscale-0 transition-all shadow-sm shrink-0"
+                    />
+                  )}
+
+                  <div class="space-y-0.5">
+                    <a
+                      href={`/autores/${autor.id}`}
+                      class="block hover:underline decoration-[#C5A880] underline-offset-2"
+                    >
+                      <p class="text-sm lg:text-base font-bold text-[#002B30] group-hover:text-[#C5A880] transition-colors leading-tight">
+                        {autor.data.name}
                       </p>
-                      <div class="flex items-center gap-2 text-[#002B30] font-bold text-xs uppercase tracking-wider">
-                        <Clock size={14} class="text-[#005F6B]" />
-                        <span>{readingTime || "5 mins"}</span>
-                      </div>
-                    </div>
+                    </a>
 
-                    <div>
-                      <p class="text-[12px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-2">
-                        Publicado em
-                      </p>
-                      <div class="flex items-center gap-2 text-[#002B30] font-bold text-xs uppercase tracking-wider">
-                        <Calendar size={14} class="text-[#005F6B]" />
-                        <span>{dataFormatada}</span>
-                      </div>
-                    </div>
-
-                  </div>
-
-                  {dadosAutores.length > 0 && (
-                  <div class="border-t border-gray-100 pt-8">
-                    <p class="text-[12px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-6">
-                      Autores
+                    <p class="text-xs text-gray-600 tracking-wider font-light">
+                      {autor.data.role}
                     </p>
-                    <div class="space-y-6">
-                      {dadosAutores.map((autor) => {
-                        if (!autor || !autor.data) return null;
-                        return (
-                          <div class="group">
-                            <div class="flex items-center gap-4">
-                              {autor.data.image && (
-                                <img
-                                  src={typeof autor.data.image === "string" ? autor.data.image : autor.data.image.src}
-                                  alt={autor.data.name}
-                                  class="w-14 h-14 rounded-full object-cover object-top grayscale group-hover:grayscale-0 transition-all shadow-sm shrink-0"
-                                />
-                              )}
-                              <div class="space-y-0.5">
-                                <a href={`/autores/${autor.id}`} class="block hover:underline decoration-[#C5A880] underline-offset-2">
-                                  <p class="text-sm lg:text-base font-bold text-[#002B30] group-hover:text-[#C5A880] transition-colors leading-tight">
-                                    {autor.data.name}
-                                  </p>
-                                </a>
-                                <p class="text-xs text-gray-600 tracking-wider font-light">
-                                  {autor.data.role}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
                   </div>
-                )}
-
                 </div>
-              </aside>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    )}
+
+  </div>
+</aside>
 
               {/* Conteúdo Principal */}
               <div class="lg:col-span-9 conteudo-artigo">
@@ -471,6 +474,55 @@ const schema = {
 >
   <Content />
 </div>
+
+{dadosAutores.length > 0 && (
+  <section class="lg:hidden mt-12 pt-8 border-t border-gray-100">
+    <h4 class="text-[12px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-6">
+  {dadosAutores.filter((autor) => autor?.data).length === 1
+    ? "Autor"
+    : "Autores"}
+</h4>
+
+    <div class="space-y-6">
+      {dadosAutores.map((autor) => {
+        if (!autor || !autor.data) return null;
+
+        return (
+          <div class="group">
+            <div class="flex items-center gap-4">
+              {autor.data.image && (
+                <img
+                  src={
+                    typeof autor.data.image === "string"
+                      ? autor.data.image
+                      : autor.data.image.src
+                  }
+                  alt={autor.data.name}
+                  class="w-14 h-14 rounded-full object-cover object-top grayscale group-hover:grayscale-0 transition-all shadow-sm shrink-0"
+                />
+              )}
+
+              <div class="space-y-0.5">
+                <a
+                  href={`/autores/${autor.id}`}
+                  class="block hover:underline decoration-[#C5A880] underline-offset-2"
+                >
+                  <p class="text-sm font-bold text-[#002B30] group-hover:text-[#C5A880] transition-colors leading-tight">
+                    {autor.data.name}
+                  </p>
+                </a>
+
+                <p class="text-xs text-gray-600 tracking-wider font-light">
+                  {autor.data.role}
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+)}
 
 {/* Seção de Perguntas Rápidas (FAQ) */}
 {perguntasRapidas && perguntasRapidas.length > 0 && (
