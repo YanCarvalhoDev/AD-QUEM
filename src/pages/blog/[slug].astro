@@ -60,32 +60,66 @@ const dataFormatada = date
     }).format(new Date(date))
   : '';
 
-let ogImage = new URL('/og-image.jpg', Astro.site || 'https://www.adquem.com.br').toString();
 
-if (artigo.data.heroImage) {
-  if (typeof artigo.data.heroImage === 'string') {
-    ogImage = artigo.data.heroImage.startsWith('http')
-      ? artigo.data.heroImage
-      : new URL(artigo.data.heroImage, Astro.site || 'https://www.adquem.com.br').toString();
-  } else if (artigo.data.heroImage.src) {
-    // 1. Pega a string do caminho que o Astro já buildou e otimizou
-    const srcEstatico = typeof artigo.data.heroImage.src === 'string'
-      ? artigo.data.heroImage.src
-      : (artigo.data.heroImage.src as any).src || '';
 
-    if (srcEstatico) {
-      // 2. Remove apenas os parâmetros de query do Vite (?origWidth...)
-      const caminhoBuildado = srcEstatico.split('?')[0];
-      
-      // 3. Monta a URL final usando sempre o domínio real de produção
-      const dominioProducao = 'https://www.adquem.com.br';
-      
-      ogImage = caminhoBuildado.startsWith('http')
-        ? caminhoBuildado
-        : `${dominioProducao}${caminhoBuildado.startsWith('/') ? '' : '/'}${caminhoBuildado}`;
+
+
+const SITE_URL = 'https://www.adquem.com.br';
+
+const heroImage = artigo.data.heroImage;
+
+const fallbackOgImage = new URL('/og-image.jpg', SITE_URL).href;
+
+const getImageSrc = (image: unknown): string | undefined => {
+  if (typeof image === 'string') {
+    return image.trim() || undefined;
+  }
+
+  if (image && typeof image === 'object' && 'src' in image) {
+    const src = image.src;
+
+    if (typeof src === 'string' && src.trim()) {
+      return src;
     }
   }
-}
+
+  return undefined;
+};
+
+const getAbsoluteImageUrl = (
+  src: string | undefined
+): string | undefined => {
+  if (!src) return undefined;
+
+  try {
+    const url = new URL(src, SITE_URL);
+
+    if (url.protocol !== 'https:' && url.protocol !== 'http:') {
+      return undefined;
+    }
+
+    return url.href;
+  } catch {
+    return undefined;
+  }
+};
+
+const heroImageSrc = getImageSrc(heroImage);
+const heroImageUrl = getAbsoluteImageUrl(heroImageSrc);
+
+const ogImage = heroImageUrl ?? fallbackOgImage;
+
+const heroImageAlt =
+  heroImage &&
+  typeof heroImage === 'object' &&
+  'alt' in heroImage &&
+  typeof heroImage.alt === 'string'
+    ? heroImage.alt
+    : title;
+
+
+
+
 
 const dataISO = date ? new Date(date).toISOString() : new Date().toISOString();
 
@@ -352,6 +386,24 @@ const schema = {
                     {title}
                   </h1>
 
+                                    {
+                    artigo.data.heroImage?.src && (
+                      <figure class="my-10">
+                        <img
+                          src={
+                            typeof artigo.data.heroImage.src === "string"
+                              ? artigo.data.heroImage.src
+                              : artigo.data.heroImage.src.src
+                          }
+                          alt={artigo.data.heroImage.alt || title}
+                  class="w-full h-auto max-h-[180px] sm:max-h-[260px] md:max-h-[320px] object-cover rounded-2xl"
+                          loading="eager"
+                          decoding="async"
+                        />
+                      </figure>
+                    )
+                  }
+
                   {subtitle && (
                     <p class="text-lg lg:text-xl text-black leading-relaxed font-light mb-8 border-b border-gray-100 pb-6">
                       {subtitle}
@@ -406,7 +458,8 @@ const schema = {
   [&_ol]:mb-8
   [&_img]:rounded-2xl
   [&_img]:my-8
-  [&_img]:w-full
+  [&_img]:w-[70%] 
+  [&_img]:mx-auto
   [&_img]:h-auto
   [&_pre]:max-w-full
   [&_pre]:overflow-x-auto
