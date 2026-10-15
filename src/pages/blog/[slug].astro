@@ -303,9 +303,9 @@ const schema = {
     <!-- Data de publicação -->
     <div class="pt-0">
       <div>
-        <h4 class="text-[12px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-0">
+        <p class="text-[12px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-0">
           Publicado em <span>{dataFormatada}</span>
-        </h4>
+        </p>
 
    
       </div>
@@ -314,11 +314,11 @@ const schema = {
     <!-- Autores -->
     {dadosAutores.length > 0 && (
       <div class="hidden lg:block border-t border-gray-100 pt-8">
-        <h4 class="text-[12px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-6">
+        <p class="text-[12px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-6">
   {dadosAutores.filter((autor) => autor?.data).length === 1
     ? "Autor"
     : "Autores"}
-</h4>
+</p>
 
         <div class="space-y-6">
           {dadosAutores.map((autor) => {
@@ -477,11 +477,11 @@ const schema = {
 
 {dadosAutores.length > 0 && (
   <section class="lg:hidden mt-12 pt-8 border-t border-gray-100">
-    <h4 class="text-[12px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-6">
+    <p class="text-[12px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-6">
   {dadosAutores.filter((autor) => autor?.data).length === 1
     ? "Autor"
     : "Autores"}
-</h4>
+</p>
 
     <div class="space-y-6">
       {dadosAutores.map((autor) => {
