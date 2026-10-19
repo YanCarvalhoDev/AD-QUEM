@@ -1,0 +1,75 @@
+---
+title: Como a Engenharia Reversa com IA pode Afetar seu Escritório
+subtitle: >-
+  Agentes de IA já transformam correções de segurança em ataques. Entenda o que
+  a lei brasileira protege, o que não protege e o que fazer.
+category: artigos
+date: 2026-10-19
+readingTime: 8 min
+authors:
+  - adriana-cardoso-de-moraes-cansian
+  - yan-carvalho
+heroImage:
+  src: >-
+    ../../assets/images/artigos/como-a-engenharia-reversa-com-ia-pode-afetar-seu-escritorio/heroImage/src.webp
+  alt: projetil-rompe-a-seguranca-digital
+perguntasRapidas: []
+specialistNote:
+  title: Nota da Especialista
+  linkText: Agendar Consulta
+  linkUrl: https://wa.me/5574988248384
+tags:
+  - Inteligência Artificial
+  - LGPD
+  - Reverse Engineer Anything
+  - Direito Digital
+---
+Engenharia reversa com IA é o uso de **agentes de inteligência artificial** para desmontar um programa pronto, entender como ele funciona e descobrir onde ele falha. Antes, esse trabalho exigia especialistas e anos de análise. Atualmente, os agentes automatizam boa parte dele, o que reduz o tempo e o custo para quem quer plagiar um software ou encontrar uma **vulnerabilidade** de segurança.
+
+O debate jurídico costuma olhar para a cópia do software, isto é, se reconstruir um programa pelo seu comportamento viola direitos autorais. O maior risco para a advocacia está nos dados de clientes e nos sistemas que dão acesso a eles, como o gerenciador de processos, a nuvem de documentos, o e-mail e os certificados digitais usados nos tribunais.
+
+## **Como a engenharia reversa com IA saiu dos jogos e chegou aos softwares**
+
+A engenharia reversa percorre o caminho inverso do desenvolvimento. Parte do programa já compilado, isto é, convertido para código de máquina, instruções que o processador entende e é capaz de **reconstruir a lógica** que o originou. Antes, dependia de especialistas e levava anos. Hoje, ferramentas abertas como o [REA](https://github.com/morluto/rea) (*Reverse Engineer Anything*), servidor de código aberto que liga **agentes de IA a descompiladores** como o Ghidra, tornaram a tarefa acessível. Descompiladores são programas que traduzem código de máquina para um texto legível por engenheiros. Segundo a [Decrypt](https://www.linkedin.com/safety/go?url=https%3A%2F%2Fdecrypt.co%2F380741%2Fgta-v-iphone-free-photoshop-ai-tool-rea-upending-software&trk=flagship-messaging-web&messageThreadUrn=urn%3Ali%3AmessagingThread%3A2-MWJmM2NhNzctMTJiNS00OGQ4LTk3OGItY2FlOGIxOWJmMmU5XzEwMA%3D%3D&lipi=urn%3Ali%3Apage%3Ad_flagship3_messaging_conversation_detail%3BBenL40s5SGmeEYzXYCwapw%3D%3D), o REA foi de menos de 10 mil para mais de 100 mil estrelas no GitHub entre 6 e 12 de outubro.
+
+Tudo começou nos jogos. Vieram jogos dentro de outros jogos, como o Homem-Aranha em Batman: Arkham City, e portes não oficiais, como Fable 2 para PC. O setor reagiu: a Activision retirou do ar imagens de um jogo descompilado por IA e a Bethesda enviou notificação extrajudicial.&nbsp;
+
+## **O que aconteceu com a Adobe, e o que não aconteceu**
+
+Em 3 de outubro, o desenvolvedor Brandon Thomas anunciou o [ArtCraft](https://getartcraft.com/tutorials), conjunto de aplicativos livres que imita funções do Photoshop, do Premiere e do Lightroom. Hoje são doze, e [versões de Word e Excel](https://www.theregister.com/software/2026/10/08/rust-upstart-reveals-reimplementation-of-microsoft-office-with-claude-on-coding-duty/5301952) vieram na sequência. Ele afirma ter usado o método de **sala limpa**: o código é escrito do zero, a partir do comportamento observado e de especificações públicas, sem ler o código da Adobe.
+
+Segundo a [innFactory](https://www.linkedin.com/safety/go?url=https%3A%2F%2Finnfactory.ai%2Fen%2Fblog%2Fai-rebuilt-photoshop-word-reverse-engineering%2F&trk=flagship-messaging-web&messageThreadUrn=urn%3Ali%3AmessagingThread%3A2-MWJmM2NhNzctMTJiNS00OGQ4LTk3OGItY2FlOGIxOWJmMmU5XzEwMA%3D%3D&lipi=urn%3Ali%3Apage%3Ad_flagship3_messaging_conversation_detail%3BBenL40s5SGmeEYzXYCwapw%3D%3D), o projeto sequer usou o REA, a Adobe recusou comentar e não há processo conhecido. Os aplicativos estão em fase alfa. A [MindStudio ](https://www.linkedin.com/safety/go?url=https%3A%2F%2Fwww.mindstudio.ai%2Fblog%2Freverse-engineer-anything-mcp&trk=flagship-messaging-web&messageThreadUrn=urn%3Ali%3AmessagingThread%3A2-MWJmM2NhNzctMTJiNS00OGQ4LTk3OGItY2FlOGIxOWJmMmU5XzEwMA%3D%3D&lipi=urn%3Ali%3Apage%3Ad_flagship3_messaging_conversation_detail%3BBenL40s5SGmeEYzXYCwapw%3D%3D)mostrou que um agente comum, só com capturas de tela, chegou a um resultado semelhante. Foi clonagem de **funcionalidade**, não de código, e já basta para abalar o modelo de negócio do software.
+
+## **Por que os dados de clientes são o alvo real?**
+
+No Brasil, a **Lei 9.609/1998** protege o programa como obra literária, e o [art. 6º, III](https://www2.camara.leg.br/legin/fed/lei/1998/lei-9609-19-fevereiro-1998-364738-publicacaooriginal-1-pl.html), afasta a ofensa quando a semelhança decorre de características funcionais. Isso favorece a reconstrução por comportamento. Esse debate interessa a quem vende software. Para o escritório, que raramente desenvolve programas, o problema está na informação que ele armazena.
+
+O que um escritório guarda são processos sob segredo de justiça, estratégias de defesa, documentos de *due diligence*, dados financeiros e pessoais de clientes, além de credenciais e certificados digitais de acesso a sistemas de tribunais. Quem obtém esse material não precisa copiar software nenhum. Pode vender a informação, usá-la contra o cliente ou se passar pelo escritório, como no golpe do falso advogado, que depende de dados reais de processos e de clientes.
+
+O que a engenharia reversa com **IA** muda é o **caminho até esse material**. O **REA** não é um botão de invasão, o que ele faz é entregar ao agente de IA o que antes exigia um especialista: o **pseudocódigo** do programa, o **mapa de chamadas** (quais funções acionam quais outras) e os textos embutidos, cada resultado acompanhado de evidências e das dúvidas que restaram.
+
+Com essa base, o agente pode comparar a versão antiga de um programa com a versão corrigida e apontar o que mudou. Como a alteração de uma correção de segurança costuma indicar o ponto da falha, o patch vira um mapa para o atacante, segundo a **Anthropic**, dali até um [exploit, o caminho pode levar horas](https://www.anthropic.com/research/n-days).
+
+Há duas ressalvas de rigor. Até onde apuramos, não há registro público de ataque real feito com o REA. A MindStudio também evidenciou que um agente comum, sem o REA, chega próximo de resultados semelhantes. A leitura prudente é que **o REA baixa a barreira**, não que ele a elimine. Para o escritório, o risco concreto está nos programas que ele já usa e raramente atualiza com rapidez: o sistema de gestão de processos, o e-mail, a VPN e o firewall. Sem equipe de TI própria, a janela entre a publicação da correção e a sua aplicação é o momento em que o atacante leva vantagem.
+
+## **Quem responde quando o fornecedor falha?**
+
+Para a **LGPD**, o escritório é o controlador dos dados de seus clientes: é ele quem decide o que coletar, por que guardar e com quem compartilhar. Por isso, cabe a ele adotar **medidas de segurança** capazes de proteger essas informações (art. 46) e comunicar à ANPD e aos clientes afetados os incidentes que possam causar risco ou dano relevante (art. 48). O prazo é curto: três dias úteis, contados de quando o escritório sabe que o incidente atingiu dados pessoais, segundo a [Resolução CD/ANPD nº 15/2024](https://www.in.gov.br/en/web/dou/-/resolucao-cd/anpd-n-15-de-24-de-abril-de-2024-556243024). "Ainda estamos apurando" não suspende essa contagem.
+
+Isso não quer dizer que o fornecedor saia ileso. O **sistema de gestão de processos**, a nuvem de documentos e o aplicativo de mensagens que tratam dados em nome do escritório são, para a lei, operadores. Devem seguir as instruções do controlador (art. 39) e respondem solidariamente pelos danos quando descumprem a lei ou essas instruções (art. 42, § 1º, I). A LGPD ainda atribui a responsabilidade pela violação de segurança a quem deixou de adotar as medidas exigidas, seja controlador, seja operador (art. 44, parágrafo único). E quem indeniza o cliente pode cobrar dos demais responsáveis, na medida da participação de cada um (art. 42, § 4º).
+
+Na prática, porém, o cliente não vai bater à porta do fornecedor. Vai bater à do **escritório**. É por isso que o contrato com quem toca os dados importa tanto: é ele que define as instruções, os padrões de segurança, o prazo para aviso de incidentes e o caminho do regresso. Sem cláusulas claras, o escritório pode até ter razão contra o fornecedor, mas terá dificuldade de prová-la.
+
+Há ainda a dimensão que nenhum contrato transfere. O **sigilo profissional** **é dever do advogado**, e sua violação sem justa causa é infração disciplinar (art. 34, VII, do Estatuto da OAB). A invasão de dispositivo informático é crime (art. 154-A do Código Penal), mas isso pune o invasor e não devolve ao cliente a confiança perdida. Com a Lei nº 15.352/2026, que transformou a ANPD em agência reguladora, e com o [Marco Legal da Cibersegurança](https://www25.senado.leg.br/web/atividade/materias/-/materia/170613) em análise no Senado (PL nº 4.752/2025), a tendência é de mais fiscalização, não de menos.
+
+## **O que fazer agora?**
+
+A engenharia reversa com IA não pede que o seu escritório seja um alvo importante. Pede apenas que ele **demore para se atualizar ou proteja mal uma senha**. Os casos que citamos tiveram em comum o elo fraco de sempre, a credencial e o intermediário, e a IA reduz o custo de achar esses elos. Se um incidente expuser os dados de um cliente, ele não vai perguntar quem era o fornecedor do sistema. Vai perguntar por que você não protegeu o que ele confiou a você.
+
+- **Atualize em dias, não em meses.** Ative as atualizações automáticas do sistema de gestão, do e-mail, da VPN, do firewall e dos computadores, e liste o que o escritório usa e quem responde por cada item.
+- **Proteja o acesso em camadas.** Exija autenticação em dois fatores em todas as contas, de preferência por aplicativo ou chave física, e guarde os certificados digitais em token ou cartão.
+- **Cobre o fornecedor por escrito.** Exija em contrato prazo para correções, aviso imediato de incidentes e backup testado de quem toca dados de clientes.
+- **Guarde menos, e guarde melhor.** Apague o que não precisa manter, criptografe o restante e dê acesso a cada processo só a quem trabalha nele.
+- **Ensaie o pior dia.** Defina quem decide, quem fala com o cliente e quem comunica a ANPD, cujo prazo em dias úteis corre a partir da ciência do incidente.
+
+Quem protege apenas o software protege a vitrine. O dever do advogado está no cofre, e o cofre só vale o que vale a **última porta que ficou sem tranca**.
