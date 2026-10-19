@@ -107,7 +107,7 @@ const getAbsoluteImageUrl = (
 const heroImageSrc = getImageSrc(heroImage);
 const heroImageUrl = getAbsoluteImageUrl(heroImageSrc);
 
-const ogImage = heroImageUrl ?? fallbackOgImage;
+const ogImage = heroImageUrl ? heroImageUrl : fallbackOgImage;
 
 const heroImageAlt =
   heroImage &&
