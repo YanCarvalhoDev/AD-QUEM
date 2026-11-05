@@ -1,0 +1,189 @@
+---
+title: 'IA na advocacia: 4 protocolos para evitar multa e OAB'
+subtitle: >-
+  Tribunais já multam peças com jurisprudência falsa e comandos ocultos. Conheça
+  os 4 protocolos de supervisão humana que protegem o escritório e o cliente.
+category: artigos
+date: 2026-11-04
+readingTime: 9 min
+authors:
+  - yan-carvalho
+heroImage:
+  src: >-
+    ../../assets/images/artigos/ia-na-advocacia-4-protocolos-para-evitar-multa-e-oab/heroImage/src.webp
+  alt: Cérebro de IA sendo contido pelas 4 camadas de protocolos da OAB
+perguntasRapidas:
+  - pergunta: O advogado pode usar inteligência artificial para redigir petições?
+    resposta: >-
+      Pode. A Recomendação nº 001/2024 do Conselho Federal da OAB admite a IA
+      generativa como ferramenta de apoio, desde que o advogado revise
+      integralmente o resultado. A responsabilidade pelo conteúdo protocolado
+      continua sendo de quem assina a peça.
+  - pergunta: É preciso informar o cliente sobre o uso de IA?
+    resposta: >-
+      A Recomendação orienta que o advogado formalize ao cliente, antes de
+      começar, a intenção de usar ferramentas de IA. A forma mais segura é uma
+      cláusula no contrato de honorários que explique a finalidade, as
+      limitações e as medidas de proteção de dados.
+  - pergunta: Citar jurisprudência inventada pela IA gera multa?
+    resposta: >-
+      Sim. Tribunais têm enquadrado a conduta como litigância de má-fé, com
+      multa prevista no art. 81 do CPC sobre o valor corrigido da causa, além de
+      ofícios à OAB e ao Ministério Público. TST, STJ e tribunais estaduais já
+      decidiram nesse sentido em 2026.
+  - pergunta: O que é prompt injection em uma petição?
+    resposta: >-
+      É a inserção de instruções ocultas, como texto em fonte branca, dirigidas
+      aos sistemas de IA que leem as peças. O STJ tratou a prática como ato
+      atentatório à dignidade da Justiça e o CNJ criou o Proseg-IA para
+      preveni-la nos tribunais.
+  - pergunta: Como saber se um PDF tem texto oculto?
+    resposta: >-
+      O teste mais simples é selecionar todo o conteúdo do PDF, copiar e colar
+      em um editor de texto sem formatação. Qualquer instrução invisível na
+      página aparece na leitura corrida. Vale aplicar o teste também aos
+      documentos recebidos da parte contrária.
+  - pergunta: Posso inserir dados do cliente em ferramentas gratuitas de IA?
+    resposta: >-
+      Não é recomendável. Ferramentas gratuitas costumam prever, nos termos de
+      uso, a reutilização do conteúdo para melhorar seus modelos. Dados de
+      clientes devem circular apenas em soluções contratadas com garantias
+      escritas de sigilo, não treinamento e retenção controlada.
+  - pergunta: A Resolução CNJ nº 615/2025 se aplica aos advogados?
+    resposta: >-
+      Não diretamente. A norma regula o desenvolvimento e o uso de IA pelos
+      órgãos do Poder Judiciário. Mas ela afeta a advocacia, porque define como
+      os tribunais leem e triam as peças e sustenta as iniciativas de detecção
+      de manipulação.
+specialistNote:
+  title: Nota da Especialista
+  linkText: Agendar Consulta
+  linkUrl: https://wa.me/5574988248384
+tags:
+  - Inteligência artificial na advocacia
+  - IA para advogados
+  - Prompt injection
+  - LGPD na advocacia
+  - Governança de IA
+---
+O **uso de inteligência artificial** na advocacia deixou de ser apenas uma questão de produtividade e passou a ser uma questão de **responsabilidade profissional**. Em 2026, tribunais brasileiros aplicaram multas, comunicaram a **OAB** e acionaram o Ministério Público em casos de **petições** com jurisprudência inexistente e com comandos escondidos para a IA do Judiciário.
+
+A saída não é abandonar as **ferramentas de IA**. É adotar quatro protocolos: validar toda fonte na origem, auditar o PDF antes do protocolo, registrar a trilha de produção e proteger os **dados** do cliente. Juntos, eles transformam a **supervisão humana** em algo que o escritório consegue demonstrar.
+
+Neste texto, "IA" significa **inteligência artificial generativa**: **modelos de linguagem** que redigem **minutas**, resumem documentos e auxiliam a **pesquisa jurídica**. Sistemas de controle de prazos e gestão processual ficam fora do recorte.
+
+## Por que os tribunais passaram a punir o uso de IA sem supervisão humana
+
+Porque o risco deixou de ser hipotético. As decisões de 2026 mostram dois tipos de falha, com gravidades diferentes: a citação de precedentes que não existem, que viola o dever de veracidade, e a inserção de comandos ocultos para manipular a leitura **automatizada** das peças, tratada como ato contra a dignidade da Justiça.
+
+### Jurisprudência falsa: o erro que já virou multa
+
+Um modelo de linguagem não consulta um banco de decisões quando responde; ele calcula a sequência de palavras mais provável. Sem uma base documental fechada, pode produzir ementa, número de processo e relator com aparência perfeita e sem existência real. É a chamada alucinação.
+
+Em março de 2026, a 6ª Turma do Tribunal Superior do Trabalho [aplicou multa de 1% sobre o valor da causa à empresa e ao seu advogado](https://www.migalhas.com.br/quentes/451473) por contrarrazões com julgados que não constavam do sistema da Corte, além de oficiar a OAB e o Ministério Público Federal. Em maio, no [HC 1.094.270](https://www.conjur.com.br/2026-mai-20/ministro-do-stj-identifica-hc-com-alucinacoes-de-ia-e-determina-comunicacao-a-oab/), o ministro Rogerio Schietti Cruz, do STJ, apontou falhas em referências a 16 julgados e afirmou que uma peça assim "não pode ser considerada produto de trabalho advocatício responsável". O [TJSC também manteve multa](https://www.tjsc.jus.br/web/imprensa/noticias/-/asset_publisher/GP1QtxFaSsX0/content/id/29888825) por jurisprudência fictícia obtida com auxílio de IA.
+
+### Prompt injection: o comando oculto que a IA do tribunal lê
+
+**Prompt injection** é a instrução escondida em um documento (fonte branca sobre fundo branco, letra minúscula, metadados) que o leitor humano não vê, mas que o sistema de IA encarregado da **análise de documentos** processa. A OWASP, referência internacional em segurança de software, classifica a técnica como [o primeiro risco das aplicações baseadas em modelos de linguagem](https://genai.owasp.org/llmrisk/llm01-prompt-injection/).
+
+O caso mais conhecido veio da 3ª Vara do Trabalho de Parauapebas (PA). Ao processar uma petição inicial pelo Galileu, sistema de IA da Justiça do Trabalho, o juízo encontrou um comando em fonte branca e [condenou solidariamente as duas advogadas a multa de 10% do valor da causa](https://www.migalhas.com.br/depeso/455925/prompt-injection-oculto-em-peticao-inicial-o-caso-de-parauapebas), cerca de R$ 84 mil; a [OAB-PA afastou as profissionais cautelarmente por 30 dias](https://diariodopara.com.br/para/oab-do-para-afasta-advogadas-acusadas-de-usar-ia-em-peticao-judicial/). Em 20 de outubro, a 1ª Turma do STJ [multou advogados em R$ 20 mil](https://www.stj.jus.br/sites/portalp/Paginas/Comunicacao/Noticias/2026/20102026-Novo-caso-de-prompt-injection-STJ-multa-advogados-em-R--20-mil-por-ato-contra-a-dignidade-da-Justica.aspx) e comunicou a OAB e o MPF.
+
+Há um ângulo pouco discutido: o escritório também pode ser vítima. Uma peça da parte contrária com instruções ocultas, colocada em uma ferramenta interna de IA para resumo, pode distorcer a análise que embasa a estratégia do cliente.
+
+![](../../assets/images/artigos/ia-na-advocacia-4-protocolos-para-evitar-multa-e-oab/linha-do-tempo-justica-e-ia-en-2026.webp)
+
+## O que a OAB e o CNJ exigem no uso de inteligência artificial
+
+Para a advocacia, a referência é a [Recomendação nº 001/2024 do Conselho Federal da OAB](https://diario.oab.org.br/pages/materia/842347). Para os tribunais, a Resolução CNJ nº 615/2025 e o programa nacional de segurança contra manipulação de IA. A Recomendação não cria sanções; ela organiza deveres que já existem no Estatuto, no Código de Ética e no **processo** civil.
+
+Aprovada em 11 de novembro de 2024, a Recomendação foi [elaborada pelo Observatório Nacional de Cibersegurança, Inteligência Artificial e Proteção de Dados da OAB](https://www.oab.org.br/util/print/62704?print=Noticia) e se organiza em quatro eixos: legislação aplicável, confidencialidade e privacidade, prática jurídica ética e comunicação sobre o uso da IA generativa. No eixo da comunicação, o texto orienta o advogado a, "previamente ao início de sua utilização, formalizar tal intenção ao cliente".
+
+No Judiciário, a [Resolução CNJ nº 615/2025](https://www.tjdft.jus.br/institucional/imprensa/campanhas-e-produtos/artigos-discursos-e-entrevistas/artigos/2025/analise-da-resolucao-do-cnj-sobre-implementacao-de-ia-no-poder-judiciario), de 11 de março de 2025, substituiu a Resolução 332/2020 e passou a disciplinar governança, classificação de riscos e supervisão humana dos sistemas de IA dos tribunais. Em 2026, o Comitê Nacional de Inteligência Artificial do Judiciário aprovou a [Manifestação Técnica CNIAJ nº 1/2026](https://www.cnj.jus.br/comite-aprova-medidas-para-ampliar-a-seguranca-da-inteligencia-artificial-no-judiciario/), que instituiu o Proseg-IA, e o Plenário do CNJ aprovou [nota técnica que orienta a "ingestão segura" de documentos processuais](https://www.cnj.jus.br/inteligencia-artificial-cnj-aprova-orientacoes-para-a-manutencao-da-seguranca-juridica/). Na prática, a peça protocolada será lida por máquinas preparadas para detectar manipulação.
+
+{% table %}
+- Fonte
+- O que exige
+- Efeito no escritório
+---
+- Recomendação OAB 001/2024
+- IA como apoio, sigilo e transparência com o cliente
+- Política interna e cláusula contratual
+---
+- Resolução CNJ 615/2025 e Proseg-IA
+- Supervisão humana e segurança nos tribunais
+- Peças passam por leitura automatizada
+---
+- [CPC](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13105.htm), arts. 77, 80 e 81
+- Veracidade, boa-fé e multa
+- Conferência de cada citação
+---
+- [LGPD](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm), art. 46
+- Medidas de segurança
+- Controle do que entra nas ferramentas
+{% /table %}
+
+## Os 4 protocolos operacionais para usar ferramentas de IA com segurança
+
+São quatro camadas que cobrem os riscos já documentados: o conteúdo (fontes), o arquivo (PDF), a prova da diligência (registro) e os dados (ambiente). Nenhuma exige tecnologia cara; todas exigem rotina e um responsável definido.
+
+### Protocolo 1: validar toda fonte na origem
+
+Todo resultado de IA é sugestão de pesquisa, nunca citação pronta. A validação segue quatro **etapas**:
+
+1. Mapear todas as referências a lei, súmula e julgado presentes na minuta.
+1. Localizar cada uma na base oficial do tribunal, como a [pesquisa de jurisprudência do STJ](https://scon.stj.jus.br/SCON/), do STF, do TST ou do tribunal local.
+1. Conferir número do processo, órgão julgador, relator e data de julgamento.
+1. Ler o inteiro teor e confirmar que o julgado sustenta a tese e continua válido.
+
+A quarta etapa costuma ser a esquecida. O STJ já [aplicou multa pela citação de súmula cancelada](https://www.conjur.com.br/?p=892454), o que mostra que existir não basta: o precedente precisa dizer o que a peça afirma que ele diz.
+
+### Protocolo 2: auditar o PDF antes do protocolo
+
+A auditoria vale para a versão final, imediatamente antes do envio ao PJe, ao e-SAJ ou ao Eproc:
+
+- **Teste do texto simples:** selecionar todo o PDF (Ctrl+A), copiar (Ctrl+C) e colar em um editor sem formatação. Texto em fonte branca ou microscópica aparece na leitura corrida.
+- **Revisão do arquivo de origem:** no editor de texto, selecionar tudo, aplicar a cor de fonte "Automático" e remover realces e sombreamentos.
+- **Metadados e anotações:** conferir as propriedades do documento e eventuais comentários ou campos ocultos.
+
+Modelos de peça reaproveitados de terceiros merecem atenção redobrada, porque podem carregar texto que ninguém do escritório inseriu conscientemente. O mesmo teste deve ser aplicado aos documentos recebidos da parte contrária antes de qualquer análise por ferramenta interna.
+
+### Protocolo 3: registrar a trilha de produção
+
+Para cada peça ou parecer produzido com apoio de IA, o escritório mantém um registro com a ferramenta e a versão usadas, a finalidade, os comandos relevantes, o nome do revisor, a data da revisão e os links de conferência das fontes. Esse registro tem uma função probatória: diante de questionamento do juízo ou da OAB, ele demonstra que houve **revisão humana** real, e não apenas declarada. Também permite que os **sócios** acompanhem como associados e estagiários usam a tecnologia.
+
+### Protocolo 4: proteger os dados do cliente em ambiente controlado
+
+Dados de clientes não devem entrar em ferramentas gratuitas cujos termos permitam reutilizar o conteúdo para treinar modelos. O caminho seguro é contratar **fornecedores** que garantam por escrito a não utilização dos dados para treinamento, retenção mínima ou nula, isolamento do ambiente e informação sobre o local de processamento. Antes do envio, nomes e documentos podem ser substituídos por marcadores neutros, como [NOME_1], técnica conhecida como pseudonimização. Essas medidas atendem ao eixo de confidencialidade da Recomendação e ao dever de segurança do art. 46 da LGPD no **tratamento de dados** pessoais.
+
+![](../../assets/images/artigos/ia-na-advocacia-4-protocolos-para-evitar-multa-e-oab/os-4-protocolos-operacionais-para-ia-segura.webp)
+
+## Como transformar os protocolos em política interna do escritório
+
+Protocolo que depende da memória de cada profissional falha no dia de maior pressão. Por isso, a recomendação é formalizar uma política de **uso de IA** aprovada pelos sócios, com:
+
+- lista de ferramentas homologadas e finalidades permitidas;
+- classificação de quais **informações** podem entrar em cada ferramenta;
+- revisão humana obrigatória de todas as peças e pareceres;
+- cláusula no contrato de honorários informando o uso de IA e suas limitações;
+- avaliação prévia de fornecedores, com exigências contratuais de **proteção de dados**;
+- **formação prática** periódica da equipe.
+
+O fechamento é um checklist de pré-protocolo, conferido por quem assina:
+
+☑  Citações localizadas na base oficial e inteiro teor lido
+
+☑  Teste de texto simples feito no PDF final
+
+☑  Registro salvo com nome do revisor
+
+☑  Dados tratados apenas em ferramenta homologada
+
+## O que os protocolos não resolvem
+
+Há debate jurídico sobre quem deve arcar com a multa. O art. 77, § 6º, do CPC afasta dos advogados as sanções por ato atentatório à dignidade da Justiça e remete a apuração à OAB, e parte da doutrina sustenta que [a multa por litigância de má-fé recai sobre a parte](https://www.migalhas.com.br/depeso/461358/o-advogado-pode-ser-multado-por-um-erro-da-inteligencia-artificial). Ainda assim, decisões de 2026 aplicaram multa diretamente a advogados, como em Parauapebas e no [caso da Paraíba em que um advogado foi condenado pessoalmente a R$ 32,8 mil](https://www.tjpb.jus.br/w/comando-oculto-em-peti%C3%A7%C3%A3o-leva-advogado-a-multa-de-r-32-8-mil-na-para%C3%ADba). Para o escritório, as duas leituras terminam mal: ou paga o cliente, ou paga o profissional, e em ambas há comunicação à OAB.
+
+Os protocolos também não substituem o raciocínio jurídico, e ferramentas de detecção de texto oculto apontam indícios, não certezas. Este conteúdo é informativo; dúvidas sobre condutas específicas devem ser levadas à seccional ou ao Conselho Federal da OAB.
+
+## Conclusão: supervisão humana documentada é a nova prova de diligência
+
+As decisões de 2026 deixam uma lição clara: o problema nunca foi a inteligência artificial, e sim o uso sem método. O escritório que confere fontes na origem, audita o arquivo, registra a produção e protege os dados continua ganhando tempo com a tecnologia e, ao mesmo tempo, consegue provar que o trabalho foi feito por quem tem o dever de fazê-lo. Na advocacia, supervisão que não pode ser demonstrada tende a ser tratada como supervisão que não existiu.
