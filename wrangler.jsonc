@@ -1,12 +1,14 @@
 {
-  "compatibility_date": "2026-04-29",
-  "compatibility_flags": ["global_fetch_strictly_public"],
-  "name": "lexstructure",
+  "name": "ad-quem",
+  "compatibility_date": "2026-11-04",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "assets": {
     "directory": "./dist",
-    "binding": "ASSETS",
+    "binding": "ASSETS"
   },
   "observability": {
-    "enabled": true,
-  },
+    "enabled": true
+  }
 }
