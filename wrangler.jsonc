@@ -1,6 +1,6 @@
 {
   "name": "ad-quem",
-  "compatibility_date": "2026-11-04",
+  "compatibility_date": "2026-06-10",
   "compatibility_flags": [
     "nodejs_compat"
   ],
