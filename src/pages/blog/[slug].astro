@@ -1,5 +1,8 @@
 ---
 // src/pages/blog/[slug].astro
+// [BUILD] ATENÇÃO: nos comentários deste bloco (entre os dois ---), não escreva nomes de tags
+// HTML entre os sinais de menor e maior (como a tag img ou a tag style). O compilador do Astro
+// pode ler isso como HTML e quebrar o build com o erro: Unexpected "export".
 import { getCollection, getEntry, render } from 'astro:content';
 import { Share2, Printer, ArrowLeft } from 'lucide-react';
 // [PDF] MODIFICADO: removidos os imports não utilizados (Clock, Calendar, Mail e MarkdownImage).
@@ -126,8 +129,8 @@ const getAbsoluteImageUrl = (
 // Logo em /public.
 const PRINT_LOGO_SRC = '/AQ_Ad_Quem_logo.png';
 
-// [PDF] MODIFICADO: a cor agora é aplicada por um filtro SVG sobre um <img> comum (antes era
-// mask-image em CSS). O <img> é baixado junto com a página, então a logo já está pronta quando
+// [PDF] MODIFICADO: a cor agora é aplicada por um filtro SVG sobre uma tag img comum (antes era
+// mask-image em CSS). A imagem é baixada junto com a página, então a logo já está pronta quando
 // o PDF é gerado; a máscara CSS só era pedida na hora de imprimir e podia sair em branco.
 // O filtro pinta o desenho da logo usando a transparência do PNG. Se o arquivo tiver FUNDO
 // SÓLIDO (não transparente), coloque `false`: a logo sai com as cores originais e a marca
@@ -462,6 +465,19 @@ const schema = {
     )}
 
   </div>
+
+  {/* [TOC] NOVO: índice progressivo na coluna da esquerda, logo abaixo da data e dos autores
+      (só desktop, a partir de 1024px). Fica DENTRO do <aside>: como o aside acompanha a altura
+      do artigo na grade, o índice consegue ficar preso (sticky) no topo da tela durante toda a
+      leitura, mesmo depois que a data e os autores saem de vista.
+      Começa vazio. Quando um H2 passa pelo topo da tela, o script cria o item correspondente
+      aqui, com uma animação que leva o título do texto até esta coluna; ao subir a página, o
+      item faz o caminho de volta e desaparece. A lista é montada pelo script a partir dos
+      próprios H2, então os links sempre batem com os ids reais. Fora do PDF (aside é .no-print). */}
+  <nav class="toc-rail" id="toc-rail" aria-label="Neste artigo">
+    <p class="toc-rail__label">Neste artigo</p>
+    <ol class="toc-rail__lista" id="toc-lista"></ol>
+  </nav>
 </aside>
 
               {/* Conteúdo Principal */}
@@ -778,6 +794,127 @@ const schema = {
 
   .print-frame.print-frame--annex {
     display: none;
+  }
+
+  /* =========================================================
+     [TOC] NOVO: ÍNDICE PROGRESSIVO (coluna da esquerda, abaixo dos autores, desktop)
+     ========================================================= */
+
+  /* Distância do topo usada pelo sumário fixo e pelo "pouso" dos títulos ao clicar.
+     Corresponde à altura do Header fixo + respiro. Se o Header mudar de altura, ajuste só aqui:
+     o script lê este valor para saber quando um título "passou" pelo topo. */
+  :root {
+    --toc-offset: 7.5rem;
+  }
+
+  .conteudo-artigo h2 {
+    scroll-margin-top: var(--toc-offset);
+  }
+
+  .toc-rail {
+    display: none;
+  }
+
+  /* Mesmo ponto em que a coluna da esquerda (aside) passa a existir: lg, 1024px. */
+  @media (min-width: 1024px) {
+    .toc-rail {
+      display: block;
+      position: sticky;
+      top: var(--toc-offset);
+      max-height: calc(100vh - var(--toc-offset) - 2rem);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      padding: 2rem 0 1rem;
+      /* mesmo filete do bloco de autores, que só aparece quando o índice tem itens */
+      border-top: 1px solid transparent;
+      transition: border-color 0.4s ease;
+    }
+    .toc-rail.is-ativo {
+      border-top-color: #f3f4f6;
+    }
+    /* Durante a animação o título vem de fora da coluna; sem isto a rolagem interna do índice
+       cortaria o título no meio do caminho. O script liga e desliga esta classe. */
+    .toc-rail.is-animando {
+      overflow: visible;
+    }
+  }
+
+  /* Rótulo no mesmo estilo do rótulo "Autores". */
+  .toc-rail__label {
+    margin: 0 0 1.25rem;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #4b5563;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .toc-rail.is-ativo .toc-rail__label {
+    opacity: 1;
+    transform: none;
+  }
+
+  .toc-rail__lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: 1px solid #e5e7eb;
+  }
+
+  /* O item "voa" a partir do canto superior esquerdo do título no texto. */
+  .toc-rail__item {
+    transform-origin: left top;
+  }
+
+  .toc-rail__link {
+    position: relative;
+    display: block;
+    padding: 0.45rem 0 0.45rem 1rem;
+    font-size: 14px;
+    line-height: 1.4;
+    color: rgb(0 43 48 / 0.6);
+    text-decoration: none;
+    transition: color 0.25s ease;
+  }
+  .toc-rail__link::before {
+    content: "";
+    position: absolute;
+    left: -1px;
+    top: 0.45rem;
+    bottom: 0.45rem;
+    width: 2px;
+    background: #C5A880;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .toc-rail__link:hover,
+  .toc-rail__link:focus-visible {
+    color: #C5A880;
+  }
+  .toc-rail__link:focus-visible {
+    outline: 2px solid #C5A880;
+    outline-offset: 2px;
+  }
+  /* Seção em leitura no momento: texto em destaque e filete dourado. */
+  .toc-rail__link[aria-current="location"] {
+    color: #002B30;
+    font-weight: 600;
+  }
+  .toc-rail__link[aria-current="location"]::before {
+    transform: scaleY(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .toc-rail,
+    .toc-rail__label,
+    .toc-rail__link,
+    .toc-rail__link::before {
+      transition: none;
+    }
   }
 
   /* [PDF] NOVO: SVG dos filtros fica fora do fluxo, sem ocupar espaço (tela e impressão). */
@@ -1381,4 +1518,209 @@ const schema = {
 
   window.addEventListener("beforeprint", prepararImpressao);
   window.addEventListener("afterprint", desfazerImpressao);
+
+  // ======================================================
+  // [TOC] NOVO: ÍNDICE PROGRESSIVO NA COLUNA DA ESQUERDA (abaixo dos autores)
+  // Um título "passa" quando o topo dele sobe acima da linha do --toc-offset (logo abaixo do
+  // Header). Nesse momento o item correspondente entra no índice vindo da posição do título
+  // (técnica FLIP: mede origem e destino e anima só transform/opacity, que não recalculam o
+  // layout da página). Ao subir, o item volta até o título e some.
+  // ======================================================
+  const iniciarSumario = (rail: HTMLElement, lista: HTMLElement) => {
+    const desktop = window.matchMedia("(min-width: 1024px)"); // igual ao @media do .toc-rail
+    const reduzirMovimento = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    // H2 do corpo do artigo + o H2 de "Esclarecimentos", na ordem em que aparecem.
+    const titulos = Array.from(
+      document.querySelectorAll<HTMLHeadingElement>(
+        ".conteudo-artigo .prose h2, .conteudo-artigo .faq-section > h2"
+      )
+    );
+    if (!titulos.length) return;
+
+    // Garante um id em cada título (o Markdown normalmente já gera; isto é só um reforço).
+    const criarId = (texto: string) => {
+      const base = normalizar(texto).replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "secao";
+      let id = base;
+      let n = 2;
+      while (document.getElementById(id)) id = `${base}-${n++}`;
+      return id;
+    };
+
+    type Entrada = {
+      titulo: HTMLHeadingElement;
+      item: HTMLLIElement;
+      link: HTMLAnchorElement;
+      visivel: boolean;
+      animacao: Animation | null;
+    };
+
+    const entradas: Entrada[] = titulos.map((titulo) => {
+      if (!titulo.id) titulo.id = criarId(titulo.textContent ?? "");
+
+      const item = document.createElement("li");
+      item.className = "toc-rail__item";
+      item.hidden = true; // começa vazio: nada aparece antes de o título passar
+
+      const link = document.createElement("a");
+      link.className = "toc-rail__link";
+      link.href = `#${titulo.id}`;
+      link.textContent = (titulo.textContent ?? "").trim();
+
+      // Clique: rolagem suave até o título (respeitando o scroll-margin do Header) e URL com #.
+      link.addEventListener("click", (evento) => {
+        evento.preventDefault();
+        titulo.scrollIntoView({ behavior: reduzirMovimento.matches ? "auto" : "smooth", block: "start" });
+        history.replaceState(null, "", `#${titulo.id}`);
+      });
+
+      item.append(link);
+      lista.append(item);
+      return { titulo, item, link, visivel: false, animacao: null };
+    });
+
+    // Ajuste fino da animação.
+    const DURACAO_ENTRADA = 650;
+    const DURACAO_SAIDA = 420;
+    const ATRASO_ENTRE_ITENS = 70; // quando vários títulos passam de uma vez (ex.: rolagem rápida)
+    const CURVA_ENTRADA = "cubic-bezier(0.22, 1, 0.36, 1)";
+    const CURVA_SAIDA = "cubic-bezier(0.4, 0, 0.2, 1)";
+
+    // Transformação que leva o item do sumário até a posição e o tamanho do título no texto.
+    const posicaoDoTitulo = (entrada: Entrada) => {
+      const origem = entrada.titulo.getBoundingClientRect();
+      const destino = entrada.item.getBoundingClientRect();
+      const tamanhoTitulo = parseFloat(getComputedStyle(entrada.titulo).fontSize);
+      const tamanhoItem = parseFloat(getComputedStyle(entrada.link).fontSize);
+      const escala = Math.min(1.8, Math.max(1, tamanhoTitulo / tamanhoItem || 1));
+      // Limita o percurso vertical a uma tela, para títulos muito acima ou abaixo da área visível.
+      const alturaTela = window.innerHeight;
+      const dx = origem.left - destino.left;
+      const dy = Math.max(-alturaTela, Math.min(alturaTela, origem.top - destino.top));
+      return `translate(${dx}px, ${dy}px) scale(${escala})`;
+    };
+
+    // Liga .is-animando enquanto houver qualquer animação em andamento (ver CSS).
+    let animacoesAtivas = 0;
+    const acompanhar = (animacao: Animation) => {
+      animacoesAtivas += 1;
+      rail.classList.add("is-animando");
+      let encerrada = false;
+      const encerrar = () => {
+        if (encerrada) return;
+        encerrada = true;
+        animacoesAtivas = Math.max(0, animacoesAtivas - 1);
+        if (animacoesAtivas === 0) rail.classList.remove("is-animando");
+      };
+      animacao.addEventListener("finish", encerrar);
+      animacao.addEventListener("cancel", encerrar);
+      return animacao;
+    };
+
+    const mostrar = (entrada: Entrada, animar: boolean, atraso = 0) => {
+      entrada.animacao?.cancel();
+      entrada.animacao = null;
+      entrada.visivel = true;
+      entrada.item.hidden = false;
+      if (!animar) return;
+
+      entrada.animacao = acompanhar(
+        entrada.item.animate(
+          [
+            { transform: posicaoDoTitulo(entrada), opacity: 0 },
+            { transform: "none", opacity: 1 },
+          ],
+          { duration: DURACAO_ENTRADA, delay: atraso, easing: CURVA_ENTRADA, fill: "backwards" }
+        )
+      );
+    };
+
+    const esconder = (entrada: Entrada, animar: boolean) => {
+      entrada.animacao?.cancel();
+      entrada.animacao = null;
+      entrada.visivel = false;
+      if (!animar) {
+        entrada.item.hidden = true;
+        return;
+      }
+
+      const animacao = acompanhar(
+        entrada.item.animate(
+          [
+            { transform: "none", opacity: 1 },
+            { transform: posicaoDoTitulo(entrada), opacity: 0 },
+          ],
+          { duration: DURACAO_SAIDA, easing: CURVA_SAIDA, fill: "forwards" }
+        )
+      );
+      entrada.animacao = animacao;
+      animacao.onfinish = () => {
+        if (entrada.animacao !== animacao) return; // o título voltou a passar no meio do caminho
+        entrada.item.hidden = true;
+        animacao.cancel();
+        entrada.animacao = null;
+      };
+    };
+
+    // Linha de "passagem": o mesmo deslocamento do Header (scroll-margin-top) + uma folga.
+    let linha = 0;
+    const medirLinha = () => {
+      linha = (parseFloat(getComputedStyle(titulos[0]).scrollMarginTop) || 120) + 24;
+    };
+
+    // Sem animação até a página terminar de carregar: evita uma "chuva" de itens quando o
+    // navegador restaura a rolagem ou abre a página direto num #título.
+    let animacaoLiberada = false;
+    const liberarAnimacao = () => window.setTimeout(() => (animacaoLiberada = true), 150);
+    if (document.readyState === "complete") liberarAnimacao();
+    else window.addEventListener("load", liberarAnimacao, { once: true });
+
+    // Rolagem com no máximo uma atualização por quadro (requestAnimationFrame).
+    let agendado = false;
+
+    const atualizar = () => {
+      agendado = false;
+      const animar = animacaoLiberada && desktop.matches && !reduzirMovimento.matches;
+
+      // Primeiro todas as leituras de posição, depois as alterações (evita recálculos extras).
+      const passou = entradas.map((entrada) => entrada.titulo.getBoundingClientRect().top < linha);
+
+      let atraso = 0;
+      entradas.forEach((entrada, i) => {
+        if (passou[i] && !entrada.visivel) {
+          mostrar(entrada, animar, atraso);
+          atraso += ATRASO_ENTRE_ITENS;
+        } else if (!passou[i] && entrada.visivel) {
+          esconder(entrada, animar);
+        }
+      });
+
+      // A seção em leitura é o último título que já passou.
+      const atual = passou.lastIndexOf(true);
+      entradas.forEach((entrada, i) => {
+        if (i === atual) entrada.link.setAttribute("aria-current", "location");
+        else entrada.link.removeAttribute("aria-current");
+      });
+      rail.classList.toggle("is-ativo", atual >= 0);
+    };
+
+    const agendar = () => {
+      if (agendado) return;
+      agendado = true;
+      requestAnimationFrame(atualizar);
+    };
+
+    medirLinha();
+    atualizar();
+    window.addEventListener("scroll", agendar, { passive: true });
+    window.addEventListener("resize", () => {
+      medirLinha();
+      agendar();
+    });
+    desktop.addEventListener("change", agendar);
+  };
+
+  const sumario = document.getElementById("toc-rail");
+  const listaSumario = document.getElementById("toc-lista");
+  if (sumario && listaSumario) iniciarSumario(sumario, listaSumario);
 </script>
