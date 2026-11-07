@@ -1,12 +1,8 @@
 ---
 // src/pages/blog/[slug].astro
-// [BUILD] ATENÇÃO: nos comentários deste bloco (entre os dois ---), não escreva nomes de tags
-// HTML entre os sinais de menor e maior (como a tag img ou a tag style). O compilador do Astro
-// pode ler isso como HTML e quebrar o build com o erro: Unexpected "export".
 import { getCollection, getEntry, render } from 'astro:content';
-import { Share2, Printer, ArrowLeft } from 'lucide-react';
-// [PDF] MODIFICADO: removidos os imports não utilizados (Clock, Calendar, Mail e MarkdownImage).
-// Printer voltou a ser usado porque o botão de PDF foi reativado.
+import { Clock, Calendar, Share2, Mail, Printer, ArrowLeft } from 'lucide-react';
+import MarkdownImage from '../../components/MarkdownImage.astro';
 
 // Importações cruciais para o estilo e estrutura da AdQuem
 import Header from '../../components/Header';
@@ -53,20 +49,6 @@ const dadosAutores = authors
       )
     )
   : [];
-
-// [PDF] NOVO: lista de autores válidos calculada uma única vez.
-// Antes o template repetia `dadosAutores.filter(...)` em vários pontos; agora a tela,
-// o PDF e o schema usam a mesma lista, já tipada sem null/undefined.
-const autoresValidos = dadosAutores.filter(
-  (autor): autor is NonNullable<(typeof dadosAutores)[number]> => Boolean(autor?.data)
-);
-const rotuloAutores = autoresValidos.length === 1 ? 'Autor' : 'Autores';
-
-// [PDF] NOVO: nomes em uma linha, no padrão do português ("A, B e C"), para o topo do PDF.
-const nomesAutores = new Intl.ListFormat('pt-BR', {
-  style: 'long',
-  type: 'conjunction',
-}).format(autoresValidos.map((autor) => autor.data.name));
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://www.adquem.com.br');
 
@@ -123,56 +105,6 @@ const getAbsoluteImageUrl = (
   }
 };
 
-// ======================================================
-// [PDF] NOVO: CONFIGURAÇÃO DO DOCUMENTO IMPRESSO
-// ======================================================
-// Logo em /public.
-const PRINT_LOGO_SRC = '/AQ_Ad_Quem_logo.png';
-
-// [PDF] MODIFICADO: a cor agora é aplicada por um filtro SVG sobre uma tag img comum (antes era
-// mask-image em CSS). A imagem é baixada junto com a página, então a logo já está pronta quando
-// o PDF é gerado; a máscara CSS só era pedida na hora de imprimir e podia sair em branco.
-// O filtro pinta o desenho da logo usando a transparência do PNG. Se o arquivo tiver FUNDO
-// SÓLIDO (não transparente), coloque `false`: a logo sai com as cores originais e a marca
-// d'água em escala de cinza, em vez de virar um retângulo colorido.
-const PRINT_LOGO_TINGIR = true;
-
-// Cores disponíveis para a logo do topo.
-const COR_DOURADO = '#C5A880';
-const COR_VERDE_LUXURY = '#002B30'; // confirme se este é o hex exato do "verde luxury" da marca
-const PRINT_LOGO_COR = COR_DOURADO; // troque para COR_VERDE_LUXURY se preferir
-
-// Cinza da marca d'água.
-const COR_MARCA_DAGUA = '#7A7A7A';
-
-// Logo colorida centralizada no topo da primeira página (papel timbrado).
-const PRINT_LOGO_NO_TOPO = true;
-
-// Marca d'água: a mesma logo, em cinza, ocupando 90% da largura no centro de TODAS as páginas.
-const PRINT_MARCA_DAGUA = true;
-
-// URL repetida no rodapé de todas as páginas.
-const urlImpressao = canonicalURL.href;
-
-// [PDF] NOVO: formata a OAB sem duplicar o prefixo caso o campo já venha como "OAB/SP 123.456".
-const formatarOAB = (oab: string) => (/^oab/i.test(oab.trim()) ? oab.trim() : `OAB ${oab.trim()}`);
-
-// [PDF] NOVO: aceita LinkedIn cadastrado com ou sem "https://".
-const normalizarUrl = (url: string) =>
-  /^https?:\/\//i.test(url.trim()) ? url.trim() : `https://${url.trim().replace(/^\/+/, '')}`;
-
-// [PDF] NOVO: versão curta do link do LinkedIn, impressa no bloco do autor.
-const encurtarUrl = (url: string) =>
-  url.replace(/^https?:\/\//i, '').replace(/^www\./i, '').replace(/\/+$/, '');
-
-// [PDF] MODIFICADO: QR code removido. O bloco de autores mantém foto, nome, cargo, OAB e o
-// link curto do LinkedIn; por isso a biblioteca `qrcode` não é mais necessária.
-const autoresPdf = autoresValidos.map((autor) => ({
-  autor,
-  foto: getImageSrc(autor.data.image),
-  linkedinUrl: autor.data.linkedin ? normalizarUrl(autor.data.linkedin) : null,
-}));
-
 const heroImageSrc = getImageSrc(heroImage);
 const heroImageUrl = getAbsoluteImageUrl(heroImageSrc);
 
@@ -200,10 +132,11 @@ const schema = {
   "image": [ogImage],
   "datePublished": dataISO,
   "dateModified": dataISO,
-  // [PDF] MODIFICADO: usa `autoresValidos` (mesma lista do PDF), em vez de filtrar de novo.
-  "author": autoresValidos.map((autor) => {
+   "author": dadosAutores
+    .filter(Boolean)
+    .map((autor) => {
       const data = autor.data;
-
+      
       // sameAs recebe apenas links de perfis/redes sociais
       const redesSociais = [
         data.linkedin,
@@ -219,17 +152,17 @@ const schema = {
         "@type": "Person",
         "name": data.name,
         "jobTitle": data.role || "Autor",
-
+        
         ...(data.bio && { "description": data.bio }),
         ...(data.email && { "email": data.email }),
 
         ...(data.knowsAbout && data.knowsAbout.length > 0 && { "knowsAbout": data.knowsAbout }),
-
+        
         // WhatsApp entra como um canal de telefone puro e padronizado
         ...(telefoneFormatado && { "telephone": telefoneFormatado }),
-
+        
         ...(redesSociais.length > 0 && { "sameAs": redesSociais }),
-
+        
         ...(data.oab && {
           "identifier": {
             "@type": "PropertyValue",
@@ -278,22 +211,22 @@ const schema = {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
-
-    <link
-      rel="preload"
-      href="/fonts/inter-v20-latin-regular.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
+    
+    <link 
+      rel="preload" 
+      href="/fonts/inter-v20-latin-regular.woff2" 
+      as="font" 
+      type="font/woff2" 
+      crossorigin 
     />
-    <link
-      rel="preload"
-      href="/fonts/instrument-serif-v5-latin-regular.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
+    <link 
+      rel="preload" 
+      href="/fonts/instrument-serif-v5-latin-regular.woff2" 
+      as="font" 
+      type="font/woff2" 
+      crossorigin 
     />
-
+    
     <title>{metaTitle}</title>
     <meta name="description" content={metaDescription} />
     {tags && tags.length > 0 && <meta name="keywords" content={tags.join(", ")} />}
@@ -316,56 +249,19 @@ const schema = {
 
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />
   </head>
-
+  
   {/* body com as classes originais do seu Layout combinadas com as do seu Artigo */}
   <body class="min-h-screen selection:bg-gold-pale selection:text-teal-deep bg-teal-deep">
-
-    {/* [PDF] MODIFICADO: ProgressIndicator e Header dentro de um wrapper .no-print.
-        Antes a ocultação dependia de seletores genéricos (header, nav, section, aside), que
-        também podiam apagar elementos do próprio artigo. */}
-    <div class="no-print">
-      <ProgressIndicator client:idle />
-      <Header isDarkPage={true} client:idle />
-    </div>
-
-    {/* [PDF] NOVO: filtros SVG que pintam a logo (dourado/verde no topo, cinza na marca d'água).
-        Ficam num SVG de tamanho zero; não podem usar display:none, senão o navegador ignora o
-        filtro. `in` com SourceAlpha mantém só o desenho da logo e troca a cor dele. */}
-    {PRINT_LOGO_TINGIR && (
-      <svg class="print-filters" width="0" height="0" aria-hidden="true" focusable="false">
-        <filter id="aq-logo-cor" color-interpolation-filters="sRGB">
-          <feFlood flood-color={PRINT_LOGO_COR} />
-          <feComposite in2="SourceAlpha" operator="in" />
-        </filter>
-        <filter id="aq-logo-cinza" color-interpolation-filters="sRGB">
-          <feFlood flood-color={COR_MARCA_DAGUA} />
-          <feComposite in2="SourceAlpha" operator="in" />
-        </filter>
-      </svg>
-    )}
-
-    {/* [PDF] MODIFICADO: marca d'água maior e visível: 90% da largura da folha, em cinza, no
-        centro de cada página (position: fixed se repete em todas as páginas impressas) e ATRÁS
-        do texto. Antes tinha 95 mm e 7% de opacidade, praticamente invisível no PDF. */}
-    {PRINT_MARCA_DAGUA && (
-      <div class:list={['print-watermark', { 'print-watermark--tingida': PRINT_LOGO_TINGIR }]} aria-hidden="true">
-        <img src={PRINT_LOGO_SRC} alt="" decoding="async" fetchpriority="low" />
-      </div>
-    )}
-
-    {/* [PDF] NOVO: rodapé do documento com o link do artigo, repetido no fim de TODAS as
-        páginas (position: fixed). O espaço dele é reservado pelo <tfoot> da moldura,
-        então nunca fica por cima do texto. */}
-    <div class="print-running-footer" aria-hidden="true">
-      <span class="print-running-footer__brand">Ad Quem</span>
-      <span class="print-running-footer__url">{urlImpressao}</span>
-    </div>
-
+    <ProgressIndicator client:idle />
+    
+    <Header isDarkPage={true} client:idle />
+    
+    
       <div class="min-h-screen bg-white font-sans selection:bg-[#E6F4F6] text-black">
         <main class="pb-40">
 
           {/* Header do Artigo (Estilo Quiet Luxury / Teal) */}
-          <div class="bg-[#002B30] pt-24 pb-0 mb-6 md:mb-20 relative overflow-hidden print:hidden no-print">
+          <div class="bg-[#002B30] pt-24 pb-0 mb-6 md:mb-20 relative overflow-hidden print:hidden">
             <div class="absolute top-0 right-0 w-1/3 h-full bg-[#C5A880]/5 blur-[120px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
             <div class="container mx-auto max-w-7xl px-6 lg:px-20 relative z-10">
               <nav class="flex items-center justify-between border-b border-white/15 pb-4">
@@ -377,39 +273,32 @@ const schema = {
                 </a>
 
                 <div class="flex items-center gap-6 text-white/60">
-                  <button type="button" class="hover:text-white transition-colors" title="Compartilhar" aria-label="Compartilhar artigo" id="btn-share">
+                  <button class="hover:text-white transition-colors" title="Compartilhar" id="btn-share">
                     <Share2 size={18} />
                   </button>
 
-                  {/* [PDF] MODIFICADO: botão de PDF reativado. Só chama window.print(); o layout
-                      vem 100% do CSS @media print e do evento beforeprint, então o Ctrl+P gera
-                      exatamente o mesmo documento. */}
-                  <button type="button" class="hover:text-white transition-colors" title="Salvar em PDF ou imprimir" aria-label="Salvar artigo em PDF ou imprimir" id="btn-print">
+                  <!-- <button class="hover:text-white transition-colors" title="Enviar por E-mail" id="btn-email">
+                    <Mail size={18} />
+                  </button> -->
+
+                <!--  <button class="hover:text-white transition-colors" title="Imprimir" onclick="window.print()">
                     <Printer size={18} />
-                  </button>
+                  </button> -->
+
+                  
+
+                  
                 </div>
               </nav>
             </div>
           </div>
-
-          {/* [PDF] NOVO: moldura de impressão.
-              O @page usa margem 0 para que o navegador NÃO imprima o cabeçalho e o rodapé
-              automáticos dele (data, título da aba, URL do navegador e paginação).
-              As margens de cima e de baixo de CADA folha vêm do <thead> e do <tfoot> vazios,
-              que os navegadores repetem em todas as páginas; as laterais vêm do padding da
-              célula. Na tela, a tabela vira blocos comuns e não altera o layout. */}
-          <table class="print-frame" role="presentation">
-            <thead class="print-frame__margin" aria-hidden="true"><tr><td></td></tr></thead>
-            <tbody>
-              <tr>
-                <td>
-
+          
           <article class="container mx-auto max-w-7xl px-6 lg:px-20">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-16">
 
               {/* Rail Lateral de Metadados */}
-              {/* [PDF] MODIFICADO: .no-print explícito (antes era escondido pela tag `aside`). */}
-<aside class="contents lg:block lg:col-span-3 lg:space-y-12 no-print">
+              
+<aside class="contents lg:block lg:col-span-3 lg:space-y-12">
   <div class="space-y-1">
 
     <!-- Data de publicação -->
@@ -418,25 +307,34 @@ const schema = {
         <p class="text-[12px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-0">
           Publicado em <span>{dataFormatada}</span>
         </p>
+
+   
       </div>
     </div>
 
     <!-- Autores -->
-    {autoresValidos.length > 0 && (
+    {dadosAutores.length > 0 && (
       <div class="hidden lg:block border-t border-gray-100 pt-8">
         <p class="text-[12px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-6">
-          {rotuloAutores}
-        </p>
+  {dadosAutores.filter((autor) => autor?.data).length === 1
+    ? "Autor"
+    : "Autores"}
+</p>
 
         <div class="space-y-6">
-          {autoresValidos.map((autor) => {
-            const foto = getImageSrc(autor.data.image);
+          {dadosAutores.map((autor) => {
+            if (!autor || !autor.data) return null;
+
             return (
               <div class="group">
                 <div class="flex items-center gap-4">
-                  {foto && (
+                  {autor.data.image && (
                     <img
-                      src={foto}
+                      src={
+                        typeof autor.data.image === "string"
+                          ? autor.data.image
+                          : autor.data.image.src
+                      }
                       alt={autor.data.name}
                       class="w-14 h-14 rounded-full object-cover object-top grayscale group-hover:grayscale-0 transition-all shadow-sm shrink-0"
                     />
@@ -465,70 +363,35 @@ const schema = {
     )}
 
   </div>
-
-  {/* [TOC] NOVO: índice progressivo na coluna da esquerda, logo abaixo da data e dos autores
-      (só desktop, a partir de 1024px). Fica DENTRO do <aside>: como o aside acompanha a altura
-      do artigo na grade, o índice consegue ficar preso (sticky) no topo da tela durante toda a
-      leitura, mesmo depois que a data e os autores saem de vista.
-      Começa vazio. Quando um H2 passa pelo topo da tela, o script cria o item correspondente
-      aqui, com uma animação que leva o título do texto até esta coluna; ao subir a página, o
-      item faz o caminho de volta e desaparece. A lista é montada pelo script a partir dos
-      próprios H2, então os links sempre batem com os ids reais. Fora do PDF (aside é .no-print). */}
-  <nav class="toc-rail" id="toc-rail" aria-label="Neste artigo">
-    <p class="toc-rail__label">Neste artigo</p>
-    <ol class="toc-rail__lista" id="toc-lista"></ol>
-  </nav>
 </aside>
 
               {/* Conteúdo Principal */}
               <div class="lg:col-span-9 conteudo-artigo">
-                {/* [PDF] MODIFICADO: classe .article-header para o PDF tratar a abertura como
-                    cabeçalho institucional centralizado, com filete separando do corpo. */}
-                <div class="md:mb-14 mb-0 article-header">
-
-                  {/* [PDF] NOVO: topo do documento, só no PDF: logo com máscara de cor +
-                      categoria, data e tempo de leitura em uma linha. */}
-                  <div class="print-only print-masthead">
-                    {/* [PDF] MODIFICADO: logo do topo virou <img> real (antes era um <div> com
-                        mask-image, que não aparecia no PDF). Carregamento normal (não lazy) e
-                        prioridade baixa: já está pronta na hora de imprimir sem pesar no LCP. */}
-                    {PRINT_LOGO_NO_TOPO && (
-                      <img
-                        src={PRINT_LOGO_SRC}
-                        alt="Ad Quem"
-                        class:list={['print-masthead__logo', { 'print-masthead__logo--tingida': PRINT_LOGO_TINGIR }]}
-                        decoding="async"
-                        fetchpriority="low"
-                      />
-                    )}
-                    <p class="print-masthead__meta">
-                      {dadosCategoria && <span>{dadosCategoria.data.name}</span>}
-                      {dataFormatada && <span>Publicado em {dataFormatada}</span>}
-                      {readingTime && <span>Leitura de {readingTime}</span>}
-                    </p>
-                  </div>
-
+                <div class="md:mb-14 mb-0">
                   {dadosCategoria && (
-                    <span class="inline-block text-[10px] font-bold text-[#005F6B] uppercase tracking-[0.3em] mb-6 print:hidden no-print">
+                    <span class="inline-block text-[10px] font-bold text-[#005F6B] uppercase tracking-[0.3em] mb-6 print:hidden">
                       {dadosCategoria.data.name.toUpperCase()}
                     </span>
+                  )}
+                    
+                  {/* Cabeçalho Formal de Autores - Aparece apenas no PDF */}
+                  {dadosAutores.length > 0 && (
+                    <div class="hidden print:block mb-6 pb-2 border-b border-gray-300">
+                      <span class="text-[9pt] uppercase tracking-wider text-gray-500 font-bold block mb-1">
+                        Autores
+                      </span>
+                      <p class="text-[11pt] font-semibold text-black">
+                        {dadosAutores.filter(Boolean).map((autor) => `${autor.data.name} (${autor.data.role})`).join("  ||  ")}
+                      </p>
+                    </div>
                   )}
 
                   <h1 class="text-4xl lg:text-[56px] font-bold text-[#002B30] leading-[1.1] tracking-wide mb-8">
                     {title}
                   </h1>
-
-                  {/* [PDF] NOVO: autores no começo, em UMA linha ("Por A, B e C"), abaixo do título. */}
-                  {autoresValidos.length > 0 && (
-                    <p class="print-only print-byline">
-                      Por <strong>{nomesAutores}</strong>
-                    </p>
-                  )}
-
-                  {/* [PDF] MODIFICADO: imagem de capa marcada como .no-print (o PDF sai sem imagem). */}
                   {
   artigo.data.heroImage?.src && (
-    <figure class="my-10 article-hero no-print">
+    <figure class="my-10">
       <img
         src={
           typeof artigo.data.heroImage.src === "string"
@@ -536,7 +399,7 @@ const schema = {
             : artigo.data.heroImage.src.src
         }
         alt={artigo.data.heroImage.alt || title}
-        class="w-full h-auto max-h-[180px] sm:max-h-[260px] md:max-h-[320px] object-cover rounded-2xl"
+class="w-full h-auto max-h-[180px] sm:max-h-[260px] md:max-h-[320px] object-cover rounded-2xl"
         loading="eager"
         decoding="async"
       />
@@ -544,14 +407,13 @@ const schema = {
   )
 }
 
-                  {/* [PDF] MODIFICADO: classe .print-lead para o subtítulo virar linha fina no PDF. */}
                   {subtitle && (
-                    <p class="text-lg lg:text-xl text-black leading-relaxed font-light mb-8 border-b border-gray-100 pb-6 print-lead">
+                    <p class="text-lg lg:text-xl text-black leading-relaxed font-light mb-8 border-b border-gray-100 pb-6">
                       {subtitle}
                     </p>
                   )}
                 </div>
-
+              
                 {quote && (
                   <blockquote class="border-l-4 border-[#C5A880] italic pl-6 text-xl my-8 text-gray-700 leading-relaxed font-serif">
                     "{quote}"
@@ -586,10 +448,10 @@ const schema = {
   [&_h3]:mt-12
   [&_h3]:mb-6
   [&_h3]:text-2xl
-  [&_h4]:text-[#005F6B]
-  [&_h4]:font-bold
-  [&_h4]:mt-10
-  [&_h4]:mb-4
+  [&_h4]:text-[#005F6B] 
+  [&_h4]:font-bold 
+  [&_h4]:mt-10 
+  [&_h4]:mb-4 
   [&_h4]:text-xl
   [&_ul]:list-disc
   [&_ul]:pl-6
@@ -599,7 +461,7 @@ const schema = {
   [&_ol]:mb-8
   [&_img]:rounded-2xl
   [&_img]:my-8
-  [&_img]:w-[70%]
+  [&_img]:w-[70%] 
   [&_img]:mx-auto
   [&_img]:h-auto
   [&_pre]:max-w-full
@@ -609,19 +471,14 @@ const schema = {
   [&_table]:table
   [&_table]:mx-auto
   [&_table]:my-8"
-
+  
 >
   <Content />
 </div>
 
 {/* Seção de Esclarecimentos Diretos (FAQ) */}
-{/* [PDF] MODIFICADO: classe .faq-section. No PDF, o script:
-    1) abre todos os <details> (fechados, as respostas não saíam);
-    2) move o FAQ para ANTES do título "Conclusão", para que a conclusão seja o último
-       bloco do texto e os autores fiquem logo abaixo dela. Depois da impressão, tudo volta
-       ao lugar original. */}
 {perguntasRapidas && perguntasRapidas.length > 0 && (
-  <div class="mt-14 pt-10 border-t border-gray-100 faq-section">
+  <div class="mt-14 pt-10 border-t border-gray-100 print:block">
     <h2 class="text-2xl font-bold text-[#002B30] mb-6 tracking-wide">
       Esclarecimentos
     </h2>
@@ -630,10 +487,8 @@ const schema = {
         <details class="group border border-gray-100 bg-gray-50/50 rounded-2xl p-5 [&_summary::-webkit-details-marker]:hidden transition-all duration-300 open:bg-white open:border-gray-200">
           <summary class="flex items-center justify-between font-semibold text-lg text-[#002B30] cursor-pointer list-none select-none gap-4">
             <span>{item.pergunta}</span>
-            {/* [PDF] MODIFICADO: ícone marcado como .no-print e xmlns corrigido
-                (estava "http://w3.org", o correto é "http://www.w3.org/2000/svg"). */}
-            <span class="transition-transform duration-300 group-open:rotate-180 shrink-0 text-[#C5A880] no-print">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            <span class="transition-transform duration-300 group-open:rotate-180 shrink-0 text-[#C5A880]">
+              <svg xmlns="http://w3.org" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
             </span>
           </summary>
           <div class="mt-4 text-gray-700 leading-relaxed text-[17px] whitespace-pre-line border-t border-gray-100/70 pt-4">
@@ -647,7 +502,7 @@ const schema = {
 
 
                 {tags && tags.length > 0 && (
-                  <div class="mt-12 pt-8 border-t border-gray-100 flex flex-wrap gap-2 print:hidden no-print">
+                  <div class="mt-12 pt-8 border-t border-gray-100 flex flex-wrap gap-2 print:hidden">
                     {tags.map((tag) => (
                       <span class="px-4 py-1.5 bg-gray-50 rounded-full text-[11px] font-medium text-gray-500 border border-gray-100">
                         {tag}
@@ -655,57 +510,31 @@ const schema = {
                     ))}
                   </div>
                 )}
-
-                {/* [PDF] NOVO: autores logo abaixo da conclusão, só no PDF.
-                    Uma linha por autor: foto | nome, cargo, OAB e link curto do LinkedIn.
-                    `break-before: avoid` tenta manter o bloco colado ao fim da conclusão e
-                    `break-inside: avoid` impede que um autor seja cortado entre duas folhas. */}
-                {autoresPdf.length > 0 && (
-                  <div class="print-only print-authors">
-                    <p class="print-label">{autoresPdf.length === 1 ? 'Sobre o autor' : 'Sobre os autores'}</p>
-                    {autoresPdf.map(({ autor, foto, linkedinUrl }) => (
-                      <div class="print-author">
-                        {foto ? (
-                          <img
-                            src={foto}
-                            alt={autor.data.name}
-                            class="print-author__photo"
-                            decoding="async"
-                            fetchpriority="low"
-                          />
-                        ) : (
-                          <span class="print-author__photo print-author__photo--vazia" aria-hidden="true"></span>
-                        )}
-
-                        <div class="print-author__info">
-                          <p class="print-author__name">{autor.data.name}</p>
-                          {autor.data.role && <p class="print-author__meta">{autor.data.role}</p>}
-                          {autor.data.oab && <p class="print-author__meta">{formatarOAB(autor.data.oab)}</p>}
-                          {linkedinUrl && <p class="print-author__link">LinkedIn: {encurtarUrl(linkedinUrl)}</p>}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
 
-
-{/* [PDF] MODIFICADO: .no-print explícito (antes era escondido pela tag `section`). */}
-{autoresValidos.length > 0 && (
-  <section class="lg:hidden mt-12 pt-8 border-t border-gray-100 no-print">
+              
+{dadosAutores.length > 0 && (
+  <section class="lg:hidden mt-12 pt-8 border-t border-gray-100">
     <h4 class="text-[12px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-6">
-      {rotuloAutores}
-    </h4>
+  {dadosAutores.filter((autor) => autor?.data).length === 1
+    ? "Autor"
+    : "Autores"}
+</h4>
 
     <div class="space-y-6">
-      {autoresValidos.map((autor) => {
-        const foto = getImageSrc(autor.data.image);
+      {dadosAutores.map((autor) => {
+        if (!autor || !autor.data) return null;
+
         return (
           <div class="group">
             <div class="flex items-center gap-4">
-              {foto && (
+              {autor.data.image && (
                 <img
-                  src={foto}
+                  src={
+                    typeof autor.data.image === "string"
+                      ? autor.data.image
+                      : autor.data.image.src
+                  }
                   alt={autor.data.name}
                   class="w-14 h-14 rounded-full object-cover object-top grayscale group-hover:grayscale-0 transition-all shadow-sm shrink-0"
                 />
@@ -736,32 +565,11 @@ const schema = {
             </div>
           </article>
 
-                </td>
-              </tr>
-            </tbody>
-            <tfoot class="print-frame__margin" aria-hidden="true"><tr><td></td></tr></tfoot>
-          </table>
-
-          {/* [PDF] NOVO: folha de referências.
-              É uma segunda moldura, separada da primeira, com quebra de página forçada antes
-              dela: assim as referências SEMPRE começam em outra folha, depois da conclusão e
-              dos autores. Ela nasce vazia; na hora de imprimir, o script localiza no texto o
-              título "Referências" (ou "Fontes", "Bibliografia") e as notas de rodapé do
-              Markdown, e move esse trecho para cá. Depois da impressão, tudo volta ao lugar.
-              Se o artigo não tiver referências, esta folha não é impressa. */}
-          <table class="print-frame print-frame--annex" id="print-annex-frame" role="presentation">
-            <thead class="print-frame__margin" aria-hidden="true"><tr><td></td></tr></thead>
-            <tbody><tr><td><div class="print-annex" id="print-annex"></div></td></tr></tbody>
-            <tfoot class="print-frame__margin" aria-hidden="true"><tr><td></td></tr></tfoot>
-          </table>
-
         </main>
       </div>
+  
 
-    {/* [PDF] MODIFICADO: Footer do site dentro de .no-print (mesmo motivo do Header). */}
-    <div class="no-print">
-      <Footer client:visible />
-    </div>
+    <Footer client:visible />
   </body>
 </html>
 
@@ -770,957 +578,109 @@ const schema = {
     --accent: #C0B283;
   }
 
-  /* =========================================================
-     [PDF] NOVO: ESTADO NA TELA
-     Tudo que é exclusivo do PDF fica invisível no navegador, e a
-     moldura principal se comporta como blocos comuns.
-     ========================================================= */
-  .print-only,
-  .print-watermark,
-  .print-running-footer,
-  .print-frame__margin {
-    display: none;
-  }
-
-  .print-frame,
-  .print-frame > tbody,
-  .print-frame > tbody > tr,
-  .print-frame > tbody > tr > td {
-    display: block;
-    width: 100%;
-    padding: 0;
-    border: 0;
-  }
-
-  .print-frame.print-frame--annex {
-    display: none;
-  }
-
-  /* =========================================================
-     [TOC] NOVO: ÍNDICE PROGRESSIVO (coluna da esquerda, abaixo dos autores, desktop)
-     ========================================================= */
-
-  /* Distância do topo usada pelo sumário fixo e pelo "pouso" dos títulos ao clicar.
-     Corresponde à altura do Header fixo + respiro. Se o Header mudar de altura, ajuste só aqui:
-     o script lê este valor para saber quando um título "passou" pelo topo. */
-  :root {
-    --toc-offset: 7.5rem;
-  }
-
-  .conteudo-artigo h2 {
-    scroll-margin-top: var(--toc-offset);
-  }
-
-  .toc-rail {
-    display: none;
-  }
-
-  /* Mesmo ponto em que a coluna da esquerda (aside) passa a existir: lg, 1024px. */
-  @media (min-width: 1024px) {
-    .toc-rail {
-      display: block;
-      position: sticky;
-      top: var(--toc-offset);
-      max-height: calc(100vh - var(--toc-offset) - 2rem);
-      overflow-y: auto;
-      overscroll-behavior: contain;
-      scrollbar-width: thin;
-      padding: 2rem 0 1rem;
-      /* mesmo filete do bloco de autores, que só aparece quando o índice tem itens */
-      border-top: 1px solid transparent;
-      transition: border-color 0.4s ease;
-    }
-    .toc-rail.is-ativo {
-      border-top-color: #f3f4f6;
-    }
-    /* Durante a animação o título vem de fora da coluna; sem isto a rolagem interna do índice
-       cortaria o título no meio do caminho. O script liga e desliga esta classe. */
-    .toc-rail.is-animando {
-      overflow: visible;
-    }
-  }
-
-  /* Rótulo no mesmo estilo do rótulo "Autores". */
-  .toc-rail__label {
-    margin: 0 0 1.25rem;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: #4b5563;
-    opacity: 0;
-    transform: translateY(-4px);
-    transition: opacity 0.4s ease, transform 0.4s ease;
-  }
-  .toc-rail.is-ativo .toc-rail__label {
-    opacity: 1;
-    transform: none;
-  }
-
-  .toc-rail__lista {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    border-left: 1px solid #e5e7eb;
-  }
-
-  /* O item "voa" a partir do canto superior esquerdo do título no texto. */
-  .toc-rail__item {
-    transform-origin: left top;
-  }
-
-  .toc-rail__link {
-    position: relative;
-    display: block;
-    padding: 0.45rem 0 0.45rem 1rem;
-    font-size: 14px;
-    line-height: 1.4;
-    color: rgb(0 43 48 / 0.6);
-    text-decoration: none;
-    transition: color 0.25s ease;
-  }
-  .toc-rail__link::before {
-    content: "";
-    position: absolute;
-    left: -1px;
-    top: 0.45rem;
-    bottom: 0.45rem;
-    width: 2px;
-    background: #C5A880;
-    transform: scaleY(0);
-    transform-origin: top;
-    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  .toc-rail__link:hover,
-  .toc-rail__link:focus-visible {
-    color: #C5A880;
-  }
-  .toc-rail__link:focus-visible {
-    outline: 2px solid #C5A880;
-    outline-offset: 2px;
-  }
-  /* Seção em leitura no momento: texto em destaque e filete dourado. */
-  .toc-rail__link[aria-current="location"] {
-    color: #002B30;
-    font-weight: 600;
-  }
-  .toc-rail__link[aria-current="location"]::before {
-    transform: scaleY(1);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .toc-rail,
-    .toc-rail__label,
-    .toc-rail__link,
-    .toc-rail__link::before {
-      transition: none;
-    }
-  }
-
-  /* [PDF] NOVO: SVG dos filtros fica fora do fluxo, sem ocupar espaço (tela e impressão). */
-  .print-filters {
-    position: absolute;
-    width: 0;
-    height: 0;
-    overflow: hidden;
-  }
-
-  /* =========================================================
-     [PDF] MODIFICADO: LAYOUT DE IMPRESSÃO (botão e Ctrl+P)
-     ========================================================= */
   @media print {
-    /* Margem 0 elimina o cabeçalho/rodapé automático do navegador.
-       As margens reais são criadas pela .print-frame. */
+    /* 1. ESCONDE APENAS O QUE NÃO É CONTEÚDO */
+    header, 
+    footer, 
+    nav, 
+    aside, 
+    section, 
+    button, 
+    .no-print, 
+    .print\:hidden {
+      display: none !important;
+      visibility: hidden !important;
+      height: 0 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    /* 2. FORÇA O FUNDO BRANCO NA RAIZ */
+    html, body, main {
+      background: #ffffff !important;
+      background-color: #ffffff !important;
+      color: #000000 !important;
+    }
+
+    /* 3. CONFIGURAÇÃO DA PÁGINA A4 */
     @page {
       size: A4;
-      margin: 0;
+      margin: 20mm !important;
     }
 
-    /* [PDF] MODIFICADO: o branco fica só no <html>; o <body> fica transparente para a marca
-       d'água (z-index -1) aparecer ATRÁS do texto sem ser coberta pelo fundo do body. */
-    html {
-      background: #ffffff !important;
-    }
     body {
-      background: transparent !important;
-    }
-
-    html,
-    body {
-      color: #1a1a1a !important;
-      margin: 0 !important;
       padding: 0 !important;
-      min-height: 0 !important;
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact; /* garante a cor da logo mesmo sem "gráficos de fundo" */
     }
 
-    /* 100vh em impressão = altura da folha; sem isso pode sobrar página em branco. */
-    .min-h-screen {
-      min-height: 0 !important;
-    }
-
-    main,
-    .bg-white {
-      background: transparent !important;
-      padding: 0 !important;
-      margin: 0 !important;
-    }
-
-    /* 1. O QUE NÃO É CONTEÚDO (explícito, por classe) */
-    .no-print,
-    .print\:hidden,
-    button,
-    a[aria-label="Contato via WhatsApp"],
-    a[href*="whatsapp"],
-    a[href*="wa.me"] {
-      display: none !important;
-    }
-
-    /* 2. MOLDURA: margens repetidas em todas as folhas */
-    .print-frame {
-      display: table !important;
-      width: 100% !important;
-      table-layout: fixed;
-      border-collapse: collapse;
-    }
-    .print-frame > thead.print-frame__margin { display: table-header-group !important; }
-    .print-frame > tfoot.print-frame__margin { display: table-footer-group !important; }
-    .print-frame > tbody { display: table-row-group !important; }
-    .print-frame > tbody > tr,
-    .print-frame > .print-frame__margin > tr { display: table-row !important; }
-    .print-frame > tbody > tr > td {
-      display: table-cell !important;
-      padding: 0 20mm !important; /* margens laterais */
-    }
-    .print-frame > thead.print-frame__margin td { height: 18mm; padding: 0; } /* margem superior */
-    .print-frame > tfoot.print-frame__margin td { height: 20mm; padding: 0; } /* margem inferior + espaço do rodapé com o link */
-
-    /* Folha de referências: só existe se o script encontrou referências, e sempre em folha nova. */
-    .print-frame.print-frame--annex:not([data-preenchido]) {
-      display: none !important;
-    }
-    .print-frame.print-frame--annex[data-preenchido] {
-      display: table !important;
-      page-break-before: always;
-      break-before: page;
-    }
-
-    /* 3. CONTEÚDO OCUPA A LARGURA ÚTIL DA FOLHA */
+    /* 4. FAZ O CONTEÚDO DO ARTIGO OCUPAR 100% DA TELA */
     article,
-    article > .grid,
-    .conteudo-artigo,
-    article.container {
+    .grid,
+    .container,
+    div[class*="lg:col-span-8"] {
       display: block !important;
       width: 100% !important;
       max-width: 100% !important;
       margin: 0 !important;
       padding: 0 !important;
-      gap: 0 !important;
+      background: transparent !important;
+      background-color: transparent !important;
     }
-
-    .prose {
-      overflow: visible !important;
-      max-width: none !important;
-    }
-
-    /* 4. SEM IMAGENS no corpo (só logo e fotos dos autores).
-       Para manter gráficos/figuras do conteúdo, apague `.prose img` e `.prose figure`. */
-    .article-hero,
-    .prose img,
-    .prose figure {
-      display: none !important;
-    }
-
-    /* 5. [PDF] MODIFICADO: MARCA D'ÁGUA em cinza, 90% da largura da folha, centro de cada página,
-       atrás do texto. Opacidade calibrada para ser visível sem atrapalhar a leitura. */
-    .print-watermark {
-      display: flex !important;
-      position: fixed;
-      inset: 0;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-      z-index: -1;
-    }
-    .print-watermark img {
-      display: block;
-      width: 80%;
-      max-height: 80%;
-      height: auto;
-      object-fit: contain;
-      filter: grayscale(100%);
-      opacity: 0.065;
-    }
-    .print-watermark.print-watermark--tingida img {
-      filter: url(#aq-logo-cinza);
-    }
-
-    /* 6. RODAPÉ COM O LINK EM TODAS AS PÁGINAS */
-    .print-running-footer {
-      display: flex !important;
-      position: fixed;
-      left: 20mm;
-      right: 20mm;
-      bottom: 9mm;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 12pt;
-      padding-top: 3pt;
-      border-top: 0.5pt solid #d9d9d9;
-      font-size: 7.5pt;
-      line-height: 1.3;
-      color: #666666;
-      z-index: 1;
-    }
-    .print-running-footer__brand {
-      flex-shrink: 0;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: #C5A880;
-    }
-    .print-running-footer__url {
-      color: #002B30;
-      text-align: right;
-      word-break: break-all;
-    }
-
-    /* 7. CABEÇALHO INSTITUCIONAL (1ª página) */
-    .print-only {
+    .print\:block, div[class*="print:block"] {
       display: block !important;
+      visibility: visible !important;
+      height: auto !important;
+      opacity: 1 !important;
     }
 
-    .article-header {
-      text-align: center;
-      margin: 0 0 16pt !important;
-      padding: 0 0 14pt !important;
-      border-bottom: 0.75pt solid #d9d9d9;
-    }
-
-    .print-masthead {
-      margin: 0 0 14pt;
-    }
-    /* [PDF] MODIFICADO: logo do topo como <img>, centralizada, pintada pelo filtro SVG. */
-    .print-masthead__logo {
-      display: block !important;
-      width: auto;
-      height: 20mm;
-      max-width: 60mm;
-      object-fit: contain;
-      margin: 0 auto 9pt;
-    }
-    .print-masthead__logo--tingida {
-      filter: url(#aq-logo-cor);
-    }
-    .print-masthead__meta {
-      margin: 0 !important;
-      font-size: 7.5pt !important;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: #005F6B !important;
-    }
-    .print-masthead__meta span + span::before {
-      content: "·";
-      margin: 0 7pt;
-      color: #C5A880;
-    }
-    .print-masthead::after {
-      content: "";
-      display: block;
-      width: 18mm;
-      margin: 10pt auto 0;
-      border-top: 1pt solid #C5A880;
-    }
-
-    .conteudo-artigo h1 {
-      font-size: 22pt !important;
-      line-height: 1.25 !important;
-      letter-spacing: 0 !important;
-      color: #002B30 !important;
-      text-align: center;
-      margin: 0 0 8pt !important;
-      page-break-after: avoid;
-      break-after: avoid;
-    }
-
-    .print-byline {
-      margin: 0 0 10pt !important;
-      font-size: 10pt !important;
-      color: #333333 !important;
-    }
-    .print-byline strong {
-      font-weight: 600;
-      color: #002B30;
-    }
-
-    .print-lead {
-      max-width: 88%;
-      margin: 0 auto !important;
-      padding: 0 !important;
-      border: 0 !important;
-      font-size: 11pt !important;
-      line-height: 1.55 !important;
-      font-style: italic;
-      color: #333333 !important;
-    }
-
-    /* 8. CORPO DO TEXTO */
-    .prose p,
-    .prose li {
-      font-size: 10.5pt !important;
-      line-height: 1.6 !important;
-      color: #1a1a1a !important;
-    }
-    .prose p {
-      margin: 0 0 9pt !important;
-      text-align: justify;
-      -webkit-hyphens: auto;
-      hyphens: auto;
-      orphans: 3;
-      widows: 3;
-    }
-
-    .prose h2,
-    .faq-section h2 {
-      font-size: 14pt !important;
+    /* 5. FORMATAÇÃO TEXTUAL DO PARECER/DOCUMENTO */
+    h1 {
+      font-size: 24pt !important;
+      color: #000000 !important;
+      margin-top: 0pt !important;
+      margin-bottom: 18pt !important;
       line-height: 1.3 !important;
-      letter-spacing: 0 !important;
-      color: #002B30 !important;
-      margin: 18pt 0 7pt !important;
-      page-break-after: avoid;
-      break-after: avoid;
-      break-inside: avoid;
+      font-weight: bold !important;
     }
-    .prose h3 {
-      font-size: 12pt !important;
-      color: #005F6B !important;
-      margin: 14pt 0 6pt !important;
+
+    h2 {
+      font-size: 15pt !important;
+      color: #111111 !important;
+      margin-top: 22pt !important;
+      margin-bottom: 10pt !important;
+      font-weight: bold !important;
+      padding-bottom: 4px !important;
       page-break-after: avoid;
-      break-after: avoid;
     }
-    .prose h4 {
+
+    p {
       font-size: 11pt !important;
-      color: #005F6B !important;
-      margin: 12pt 0 5pt !important;
-      page-break-after: avoid;
-      break-after: avoid;
-    }
-
-    .conteudo-artigo blockquote {
-      font-size: 11pt !important;
-      line-height: 1.55 !important;
-      color: #333333 !important;
-      border-left: 2pt solid #C5A880 !important;
-      padding: 2pt 0 2pt 10pt !important;
-      margin: 12pt 0 !important;
-      break-inside: avoid;
-    }
-
-    .prose ul,
-    .prose ol {
-      padding-left: 16pt !important;
-      margin: 0 0 10pt !important;
-    }
-    .prose li {
-      margin-bottom: 3pt !important;
-      break-inside: avoid;
-    }
-
-    /* [PDF] MODIFICADO: links saem como no site, só o texto, sublinhado em dourado e clicável
-       no PDF. Removido o "(URL)" que era impresso depois do texto: ele separava o link da
-       frase e, com word-break: break-all, ainda quebrava o endereço no meio ("ht tp").
-       overflow-wrap só quebra um endereço longo escrito como texto se ele não couber na linha. */
-    .prose a,
-    .print-annex a {
-      color: inherit !important;
-      text-decoration: underline;
-      text-decoration-color: #C5A880;
-      text-underline-offset: 1.5pt;
-      overflow-wrap: anywhere;
-    }
-
-    .prose table {
-      display: table !important;
-      width: 100% !important;
-      border-collapse: collapse;
-      margin: 10pt 0 !important;
-      font-size: 9pt !important;
-    }
-    .prose thead { display: table-header-group; }
-    .prose tr { break-inside: avoid; }
-    .prose th,
-    .prose td {
-      border: 0.5pt solid #bbbbbb;
-      padding: 4pt 6pt;
-      text-align: left;
-    }
-
-    .prose pre {
-      white-space: pre-wrap !important;
-      overflow: visible !important;
-      font-size: 8.5pt !important;
-      border: 0.5pt solid #dddddd;
-      padding: 6pt;
-      break-inside: avoid;
-    }
-
-    /* 9. FAQ: perguntas e respostas abertas, sem caixas */
-    .faq-section {
-      margin: 18pt 0 0 !important;
-      padding-top: 12pt !important;
-      border-top: 0.75pt solid #d9d9d9 !important;
-    }
-    .faq-section details {
-      border: 0 !important;
-      background: none !important;
-      border-radius: 0 !important;
-      padding: 0 !important;
-      margin: 0 0 9pt !important;
-      break-inside: avoid;
-    }
-    .faq-section summary {
-      display: block !important;
-      font-size: 10.5pt !important;
-      font-weight: 700;
-      color: #002B30 !important;
-    }
-    .faq-section details > div {
-      font-size: 10.5pt !important;
+      color: #1a1a1a !important;
       line-height: 1.6 !important;
-      color: #1a1a1a !important;
-      margin-top: 3pt !important;
-      padding-top: 0 !important;
-      border: 0 !important;
-      text-align: justify;
+      margin-bottom: 12pt !important;
     }
 
-    /* 10. AUTORES LOGO ABAIXO DA CONCLUSÃO */
-    .print-authors {
-      margin-top: 20pt;
-      padding-top: 12pt;
-      border-top: 0.75pt solid #d9d9d9;
-      page-break-before: avoid;
-      break-before: avoid;
-    }
-    .print-label {
-      margin: 0 0 10pt !important;
-      font-size: 7.5pt !important;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: #005F6B !important;
-    }
-    .print-author {
-      display: grid !important;
-      grid-template-columns: 16mm 1fr; /* [PDF] MODIFICADO: sem a coluna do QR */
-      align-items: center;
-      gap: 10pt;
-      padding: 8pt 0;
-      border-bottom: 0.5pt solid #eeeeee;
-      break-inside: avoid;
-    }
-    .print-author:last-child {
-      border-bottom: 0;
-    }
-    .print-author__photo {
-      display: block;
-      width: 16mm;
-      height: 16mm;
-      border-radius: 50%;
-      object-fit: cover;
-      object-position: top;
-      filter: grayscale(100%); /* fotos em P&B para manter a sobriedade do documento */
-    }
-    .print-author__photo--vazia {
-      background: #f2f2f2;
-    }
-    .print-author__info p {
-      margin: 0 !important;
-      text-align: left;
-    }
-    .print-author__name {
-      font-size: 10.5pt !important;
-      font-weight: 700;
-      color: #002B30 !important;
-    }
-    .print-author__meta {
-      margin-top: 1pt !important;
-      font-size: 8.5pt !important;
-      color: #555555 !important;
-    }
-    .print-author__link {
-      margin-top: 3pt !important;
-      font-size: 8pt !important;
-      color: #005F6B !important;
-      word-break: break-all;
-    }
-
-    /* 11. FOLHA DE REFERÊNCIAS (conteúdo movido para fora de .prose, por isso estilo próprio) */
-    .print-annex h2,
-    .print-annex h3 {
-      margin: 0 0 10pt !important;
-      font-size: 14pt !important;
-      font-weight: 700;
-      line-height: 1.3;
-      color: #002B30 !important;
-      break-after: avoid;
-    }
-    .print-annex p,
-    .print-annex li {
-      margin: 0 0 7pt !important;
-      font-size: 9.5pt !important;
-      line-height: 1.45 !important;
-      color: #1a1a1a !important;
-      text-align: left;
-      break-inside: avoid;
-    }
-    .print-annex ul,
-    .print-annex ol {
-      margin: 0 0 10pt !important;
-      padding-left: 14pt !important;
-    }
-    .print-annex ul { list-style: disc; }
-    .print-annex ol { list-style: decimal; }
-    .print-annex section + section,
-    .print-annex .footnotes {
-      margin-top: 14pt;
-    }
-  }
-
-  /* [PDF] NOVO: reforço para Chrome recente, que esconde o conteúdo de <details> fechado via
-     ::details-content. Regra separada porque navegadores sem suporte descartam a regra
-     inteira; nesses, quem abre o FAQ é o script de beforeprint. */
-  @media print {
-    .faq-section details::details-content {
-      content-visibility: visible;
-      display: block;
+    img {
+      max-width: 70% !important;
+      margin: 15pt auto !important;
+      display: block !important;
+      page-break-inside: avoid;
     }
   }
 </style>
 
 <script>
-  // [PDF] MODIFICADO: compartilhar.
-  // Antes, cancelar o menu de compartilhamento (AbortError) caía no catch e mostrava
-  // "Link copiado" sem o usuário pedir. Agora o cancelamento é ignorado.
   const btnShare = document.getElementById("btn-share");
-  btnShare?.addEventListener("click", async () => {
-    const url = window.location.href;
-
-    if (navigator.share) {
+  if (btnShare) {
+    btnShare.addEventListener("click", async () => {
       try {
-        await navigator.share({ title: document.title, url });
-        return;
-      } catch (err) {
-        if (err instanceof DOMException && err.name === "AbortError") return;
+        await navigator.share({
+          title: document.title,
+          url: window.location.href,
+        });
+      } catch {
+        navigator.clipboard.writeText(window.location.href);
+        alert("Link copiado para a área de transferência!");
       }
-    }
-
-    try {
-      await navigator.clipboard.writeText(url);
-      alert("Link copiado para a área de transferência!");
-    } catch {
-      alert(`Copie o link do artigo: ${url}`);
-    }
-  });
-
-  // [PDF] NOVO: botão de PDF. Só abre a janela de impressão; o layout vem do CSS e do
-  // beforeprint abaixo, por isso o resultado é idêntico ao Ctrl+P.
-  document.getElementById("btn-print")?.addEventListener("click", () => window.print());
-
-  // ======================================================
-  // [PDF] NOVO: REORGANIZAÇÃO DO DOCUMENTO SÓ PARA A IMPRESSÃO
-  // `beforeprint` dispara tanto no botão quanto no Ctrl+P. Tudo o que é movido aqui é
-  // registrado e devolvido ao lugar no `afterprint`, então a página na tela não muda.
-  // ======================================================
-
-  // Compara títulos sem acento e sem diferença de maiúsculas.
-  const normalizar = (texto: string) =>
-    texto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
-
-  // Títulos reconhecidos. Acrescente variações aqui se a equipe usar outros nomes.
-  const RE_REFERENCIAS = /^(referencias|fontes|bibliografia|obras citadas)/;
-  const RE_CONCLUSAO = /^(conclusao|conclusoes|consideracoes finais)/;
-
-  type Movimento = { no: Node; pai: Node; proximo: Node | null };
-  let movimentos: Movimento[] = [];
-  let detailsAbertos: HTMLDetailsElement[] = [];
-
-  const mover = (no: Node, destino: Node, antesDe: Node | null = null) => {
-    if (!no.parentNode) return;
-    movimentos.push({ no, pai: no.parentNode, proximo: no.nextSibling });
-    destino.insertBefore(no, antesDe);
-  };
-
-  // Um título e tudo o que vem depois dele, até o próximo título de nível igual ou maior.
-  const secaoAPartirDe = (titulo: Element) => {
-    const nivel = Number(titulo.tagName.charAt(1));
-    const elementos: Element[] = [titulo];
-    let atual = titulo.nextElementSibling;
-    while (atual) {
-      if (/^H[1-6]$/.test(atual.tagName) && Number(atual.tagName.charAt(1)) <= nivel) break;
-      elementos.push(atual);
-      atual = atual.nextElementSibling;
-    }
-    return elementos;
-  };
-
-  const desfazerImpressao = () => {
-    for (let i = movimentos.length - 1; i >= 0; i--) {
-      const { no, pai, proximo } = movimentos[i];
-      pai.insertBefore(no, proximo);
-    }
-    movimentos = [];
-
-    detailsAbertos.forEach((details) => (details.open = false));
-    detailsAbertos = [];
-
-    document.getElementById("print-annex-frame")?.removeAttribute("data-preenchido");
-  };
-
-  const prepararImpressao = () => {
-    // Evita aplicar duas vezes se o navegador disparar beforeprint repetido.
-    if (movimentos.length || detailsAbertos.length) desfazerImpressao();
-
-    const prose = document.querySelector(".conteudo-artigo .prose");
-    const anexo = document.getElementById("print-annex");
-    const moldura = document.getElementById("print-annex-frame");
-    const faq = document.querySelector(".faq-section");
-    if (!prose || !anexo || !moldura) return;
-
-    const titulos = Array.from(prose.querySelectorAll("h2, h3"));
-
-    // 1) Referências: vão para a folha separada, depois da conclusão e dos autores.
-    const tituloReferencias = titulos.find((h) => RE_REFERENCIAS.test(normalizar(h.textContent ?? "")));
-    if (tituloReferencias) {
-      secaoAPartirDe(tituloReferencias).forEach((el) => mover(el, anexo));
-    }
-
-    // Notas de rodapé geradas pelo Markdown ([^1]) também vão para a folha de referências.
-    const notas = prose.querySelector("section[data-footnotes], .footnotes");
-    if (notas) mover(notas, anexo);
-
-    if (anexo.childElementCount > 0) moldura.setAttribute("data-preenchido", "");
-
-    // 2) FAQ antes da conclusão, para os autores ficarem logo abaixo dela.
-    const tituloConclusao = titulos.find((h) => RE_CONCLUSAO.test(normalizar(h.textContent ?? "")));
-    if (faq && tituloConclusao?.parentNode) {
-      mover(faq, tituloConclusao.parentNode, tituloConclusao);
-    }
-
-    // 3) Abre os <details> do FAQ para as respostas saírem no PDF.
-    detailsAbertos = Array.from(
-      document.querySelectorAll<HTMLDetailsElement>(".faq-section details:not([open])")
-    );
-    detailsAbertos.forEach((details) => (details.open = true));
-  };
-
-  window.addEventListener("beforeprint", prepararImpressao);
-  window.addEventListener("afterprint", desfazerImpressao);
-
-  // ======================================================
-  // [TOC] NOVO: ÍNDICE PROGRESSIVO NA COLUNA DA ESQUERDA (abaixo dos autores)
-  // Um título "passa" quando o topo dele sobe acima da linha do --toc-offset (logo abaixo do
-  // Header). Nesse momento o item correspondente entra no índice vindo da posição do título
-  // (técnica FLIP: mede origem e destino e anima só transform/opacity, que não recalculam o
-  // layout da página). Ao subir, o item volta até o título e some.
-  // ======================================================
-  const iniciarSumario = (rail: HTMLElement, lista: HTMLElement) => {
-    const desktop = window.matchMedia("(min-width: 1024px)"); // igual ao @media do .toc-rail
-    const reduzirMovimento = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-    // H2 do corpo do artigo + o H2 de "Esclarecimentos", na ordem em que aparecem.
-    const titulos = Array.from(
-      document.querySelectorAll<HTMLHeadingElement>(
-        ".conteudo-artigo .prose h2, .conteudo-artigo .faq-section > h2"
-      )
-    );
-    if (!titulos.length) return;
-
-    // Garante um id em cada título (o Markdown normalmente já gera; isto é só um reforço).
-    const criarId = (texto: string) => {
-      const base = normalizar(texto).replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "secao";
-      let id = base;
-      let n = 2;
-      while (document.getElementById(id)) id = `${base}-${n++}`;
-      return id;
-    };
-
-    type Entrada = {
-      titulo: HTMLHeadingElement;
-      item: HTMLLIElement;
-      link: HTMLAnchorElement;
-      visivel: boolean;
-      animacao: Animation | null;
-    };
-
-    const entradas: Entrada[] = titulos.map((titulo) => {
-      if (!titulo.id) titulo.id = criarId(titulo.textContent ?? "");
-
-      const item = document.createElement("li");
-      item.className = "toc-rail__item";
-      item.hidden = true; // começa vazio: nada aparece antes de o título passar
-
-      const link = document.createElement("a");
-      link.className = "toc-rail__link";
-      link.href = `#${titulo.id}`;
-      link.textContent = (titulo.textContent ?? "").trim();
-
-      // Clique: rolagem suave até o título (respeitando o scroll-margin do Header) e URL com #.
-      link.addEventListener("click", (evento) => {
-        evento.preventDefault();
-        titulo.scrollIntoView({ behavior: reduzirMovimento.matches ? "auto" : "smooth", block: "start" });
-        history.replaceState(null, "", `#${titulo.id}`);
-      });
-
-      item.append(link);
-      lista.append(item);
-      return { titulo, item, link, visivel: false, animacao: null };
     });
-
-    // Ajuste fino da animação.
-    const DURACAO_ENTRADA = 650;
-    const DURACAO_SAIDA = 420;
-    const ATRASO_ENTRE_ITENS = 70; // quando vários títulos passam de uma vez (ex.: rolagem rápida)
-    const CURVA_ENTRADA = "cubic-bezier(0.22, 1, 0.36, 1)";
-    const CURVA_SAIDA = "cubic-bezier(0.4, 0, 0.2, 1)";
-
-    // Transformação que leva o item do sumário até a posição e o tamanho do título no texto.
-    const posicaoDoTitulo = (entrada: Entrada) => {
-      const origem = entrada.titulo.getBoundingClientRect();
-      const destino = entrada.item.getBoundingClientRect();
-      const tamanhoTitulo = parseFloat(getComputedStyle(entrada.titulo).fontSize);
-      const tamanhoItem = parseFloat(getComputedStyle(entrada.link).fontSize);
-      const escala = Math.min(1.8, Math.max(1, tamanhoTitulo / tamanhoItem || 1));
-      // Limita o percurso vertical a uma tela, para títulos muito acima ou abaixo da área visível.
-      const alturaTela = window.innerHeight;
-      const dx = origem.left - destino.left;
-      const dy = Math.max(-alturaTela, Math.min(alturaTela, origem.top - destino.top));
-      return `translate(${dx}px, ${dy}px) scale(${escala})`;
-    };
-
-    // Liga .is-animando enquanto houver qualquer animação em andamento (ver CSS).
-    let animacoesAtivas = 0;
-    const acompanhar = (animacao: Animation) => {
-      animacoesAtivas += 1;
-      rail.classList.add("is-animando");
-      let encerrada = false;
-      const encerrar = () => {
-        if (encerrada) return;
-        encerrada = true;
-        animacoesAtivas = Math.max(0, animacoesAtivas - 1);
-        if (animacoesAtivas === 0) rail.classList.remove("is-animando");
-      };
-      animacao.addEventListener("finish", encerrar);
-      animacao.addEventListener("cancel", encerrar);
-      return animacao;
-    };
-
-    const mostrar = (entrada: Entrada, animar: boolean, atraso = 0) => {
-      entrada.animacao?.cancel();
-      entrada.animacao = null;
-      entrada.visivel = true;
-      entrada.item.hidden = false;
-      if (!animar) return;
-
-      entrada.animacao = acompanhar(
-        entrada.item.animate(
-          [
-            { transform: posicaoDoTitulo(entrada), opacity: 0 },
-            { transform: "none", opacity: 1 },
-          ],
-          { duration: DURACAO_ENTRADA, delay: atraso, easing: CURVA_ENTRADA, fill: "backwards" }
-        )
-      );
-    };
-
-    const esconder = (entrada: Entrada, animar: boolean) => {
-      entrada.animacao?.cancel();
-      entrada.animacao = null;
-      entrada.visivel = false;
-      if (!animar) {
-        entrada.item.hidden = true;
-        return;
-      }
-
-      const animacao = acompanhar(
-        entrada.item.animate(
-          [
-            { transform: "none", opacity: 1 },
-            { transform: posicaoDoTitulo(entrada), opacity: 0 },
-          ],
-          { duration: DURACAO_SAIDA, easing: CURVA_SAIDA, fill: "forwards" }
-        )
-      );
-      entrada.animacao = animacao;
-      animacao.onfinish = () => {
-        if (entrada.animacao !== animacao) return; // o título voltou a passar no meio do caminho
-        entrada.item.hidden = true;
-        animacao.cancel();
-        entrada.animacao = null;
-      };
-    };
-
-    // Linha de "passagem": o mesmo deslocamento do Header (scroll-margin-top) + uma folga.
-    let linha = 0;
-    const medirLinha = () => {
-      linha = (parseFloat(getComputedStyle(titulos[0]).scrollMarginTop) || 120) + 24;
-    };
-
-    // Sem animação até a página terminar de carregar: evita uma "chuva" de itens quando o
-    // navegador restaura a rolagem ou abre a página direto num #título.
-    let animacaoLiberada = false;
-    const liberarAnimacao = () => window.setTimeout(() => (animacaoLiberada = true), 150);
-    if (document.readyState === "complete") liberarAnimacao();
-    else window.addEventListener("load", liberarAnimacao, { once: true });
-
-    // Rolagem com no máximo uma atualização por quadro (requestAnimationFrame).
-    let agendado = false;
-
-    const atualizar = () => {
-      agendado = false;
-      const animar = animacaoLiberada && desktop.matches && !reduzirMovimento.matches;
-
-      // Primeiro todas as leituras de posição, depois as alterações (evita recálculos extras).
-      const passou = entradas.map((entrada) => entrada.titulo.getBoundingClientRect().top < linha);
-
-      let atraso = 0;
-      entradas.forEach((entrada, i) => {
-        if (passou[i] && !entrada.visivel) {
-          mostrar(entrada, animar, atraso);
-          atraso += ATRASO_ENTRE_ITENS;
-        } else if (!passou[i] && entrada.visivel) {
-          esconder(entrada, animar);
-        }
-      });
-
-      // A seção em leitura é o último título que já passou.
-      const atual = passou.lastIndexOf(true);
-      entradas.forEach((entrada, i) => {
-        if (i === atual) entrada.link.setAttribute("aria-current", "location");
-        else entrada.link.removeAttribute("aria-current");
-      });
-      rail.classList.toggle("is-ativo", atual >= 0);
-    };
-
-    const agendar = () => {
-      if (agendado) return;
-      agendado = true;
-      requestAnimationFrame(atualizar);
-    };
-
-    medirLinha();
-    atualizar();
-    window.addEventListener("scroll", agendar, { passive: true });
-    window.addEventListener("resize", () => {
-      medirLinha();
-      agendar();
-    });
-    desktop.addEventListener("change", agendar);
-  };
-
-  const sumario = document.getElementById("toc-rail");
-  const listaSumario = document.getElementById("toc-lista");
-  if (sumario && listaSumario) iniciarSumario(sumario, listaSumario);
+  }
 </script>
